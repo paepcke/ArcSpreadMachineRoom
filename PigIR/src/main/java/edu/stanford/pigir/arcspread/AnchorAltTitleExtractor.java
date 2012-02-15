@@ -14,8 +14,14 @@ import edu.stanford.pigir.pigudf.AnchorAltTitleText;
 /**
  * @author paepcke
  *
+ * Facility to extract anchor texts, image ALT texts,
+ * and image Title texts from HTML content.
  */
 public class AnchorAltTitleExtractor {
+
+	/*---------------------------------
+	 * extract 
+	 *--------------*/
 	
 	/**
 	 * Given an HTML string, extract all link anchor texts, 
@@ -61,7 +67,12 @@ public class AnchorAltTitleExtractor {
 		return result.getAll();
 	}
 
+	// ------------------------------------------------------------    Main (Example)  -----------------------------------------
+
+	
 	/**
+	 * This class is intended to be used by applications.
+	 * Nonetheless, here is an example.
 	 * @param args
 	 */
 	public static void main(String[] args) {

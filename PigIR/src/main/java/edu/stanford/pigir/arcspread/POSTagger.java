@@ -22,6 +22,8 @@ import edu.stanford.pigir.pigudf.PartOfSpeechTag;
 /**
  * @author paepcke
  *
+ * Facility to tag arbitrary text with part-of-speech tags. 
+ * Special facilities are provided for HTML text.
  */
 public class POSTagger implements Iterator<List<String>> {
 

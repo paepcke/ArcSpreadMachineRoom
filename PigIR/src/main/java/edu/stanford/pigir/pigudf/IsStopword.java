@@ -11,7 +11,7 @@ import org.apache.pig.data.Tuple;
 public class IsStopword extends FilterFunc {
 
 	@SuppressWarnings("serial")
-	private static final HashMap<String, Boolean> stopwords = new HashMap<String,Boolean>() {
+	protected static HashMap<String, Boolean> stopwords = new HashMap<String,Boolean>() {
 		{
 			put("a", true);
 			put("A", true);

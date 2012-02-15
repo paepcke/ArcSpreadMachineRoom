@@ -32,11 +32,11 @@ public class MakeWordPairDistances extends EvalFunc<Tuple>  {
      *    
 	 * Input: ({(Girl,d2,0),(child,d2,1),(lives,d2,2),(close,d2,3)})
      * would generate:
-     * ((girl,child,1,d2
-     *	(child,lives,1,d2
-     *	(girl,lives,2,d2
-     *	(lives,close,1,d2
-     *	(child,close,2,d2
+     * ((girl,child,1,d2)
+     *	(child,lives,1,d2)
+     *	(girl,lives,2,d2)
+     *	(lives,close,1,d2)
+     *	(child,close,2,d2)
      *	(girl,close,3,d2))
      *
      * The maximum distance between words that will still output

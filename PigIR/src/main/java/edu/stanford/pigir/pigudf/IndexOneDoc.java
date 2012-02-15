@@ -35,7 +35,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
  * </ul>
 
  * <b>Output:</b><br>  
- *  	 Bag of tuples structured like this: {@code (docID,postingsCount), (token1,docid,tokenPosition1), (token2,docid,tokenPosition2), ... }
+ *  	 Bag of tuples structured like this: {@code ("na",docID,postingsCount), (token1,docid,tokenPosition1), (token2,docid,tokenPosition2), ... }
  *  	 The docID is the same in all the result member tuples. The initial tuple with the docID is
  *  	 convenient for some callers, as is the count of postings.
  *
