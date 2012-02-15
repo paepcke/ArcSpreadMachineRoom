@@ -14,7 +14,7 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
-import pigir.Common;
+import edu.stanford.pigir.Common;
 
 /**
  * Extension of standard tokenizer. This UDF adds the ability to

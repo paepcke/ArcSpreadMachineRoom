@@ -226,14 +226,12 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	
 	//  -----------------------------------  MAP<String,String> Methods -----------------------
 
-	@Override
 	public int size() {
 		// Plus 1 is for the pseudo 'content' byte array
 		// that's not really part of the hash:
 		return md.size() + 1;
 	}
 
-	@Override
 	public boolean isEmpty() {
 		return (md == null) && (wbContent.length == 0); 
 	}
@@ -248,7 +246,6 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	 * as well as through the HTTP header keys that are contained
 	 * in the httpHeader HashMap, and the keys CONTENT and HTTP_HEADER_MAP.
 	 */
-	@Override
 	public boolean containsKey(Object key) {
 		String lowerCaseKey = ((String) key).toLowerCase();
 		return (md.containsKey(lowerCaseKey) || 
@@ -265,7 +262,7 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	 * the binary content. We can't throw an error,
 	 * because that breaks the Map interface contract. 
 	 */
-	@Override
+
 	public boolean containsValue(Object value) {
 		if (md.containsValue(value))
 			return true;
@@ -284,7 +281,7 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	 * <b>Note:</b> This method only works for the metadata. You
 	 * must use getContent() to retrieve content from binary records.
 	 */
-	@Override
+
 	public String get(Object key) {
 		String val;
 		// Is the key from one of the WebBase header fields?
@@ -325,7 +322,7 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	 * I'm not sure whether this 
 	 * 
 	 */
-	@Override
+
 	public String remove(Object key) {
 		String lowerCaseKey = ((String)key).toLowerCase();
 		Object oldVal;
@@ -360,7 +357,6 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 		return objVals;
 	}
 	
-	@Override
 	public Set<String> keySet() {
 		Set<String> res = md.keySet();
 		res.addAll(httpHeader.keySet());
@@ -395,7 +391,6 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
 	public Set entrySet() {
 		return entrySet(true);
 	}
@@ -414,7 +409,6 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 		return res;
 	}
 
-	@Override
 	public void putAll(Map<? extends String, ? extends Object> m) {
 		for (String key : keySet()) {
 			put(key, m);
@@ -432,17 +426,14 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 			value = theValue;
 		}
 		
-		@Override
 		public K getKey() {
 			return key;
 		}
 
-		@Override
 		public V getValue() {
 			return value;
 		}
 
-		@Override
 		public V setValue(V theValue) {
 			V oldVal = value;
 			value = theValue;

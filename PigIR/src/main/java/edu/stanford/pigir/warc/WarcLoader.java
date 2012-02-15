@@ -152,7 +152,6 @@ public class WarcLoader extends FileInputLoadFunc implements LoadPushDown {
 		}
     }
 
-    @Override
     public RequiredFieldResponse pushProjection(RequiredFieldList requiredFieldList) throws FrontendException {
         if (requiredFieldList == null)
             return null;
@@ -232,7 +231,6 @@ public class WarcLoader extends FileInputLoadFunc implements LoadPushDown {
         this.signature = signature; 
     }
 
-    @Override
     public List<OperatorSet> getFeatures() {
         return Arrays.asList(LoadPushDown.OperatorSet.PROJECTION);
     }

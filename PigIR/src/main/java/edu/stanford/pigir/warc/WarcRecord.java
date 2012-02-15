@@ -53,7 +53,7 @@ import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 
-import pigir.pigudf.LineAndChunkReader;
+import edu.stanford.pigir.pigudf.LineAndChunkReader;
 
 public class WarcRecord extends Text implements WarcRecordMap {
 
@@ -413,25 +413,21 @@ public class WarcRecord extends Text implements WarcRecordMap {
 	
 	//  -----------------------------------  MAP<String,String> Methods -----------------------
 
-	@Override
 	public int size() {
 		// Plus 1 is for the pseudo 'content' byte array
 		// that's not really part of the hash:
 		return headerMap.size() + 1;
 	}
 
-	@Override
 	public boolean isEmpty() {
 		return headerMap.isEmpty() && (warcContent.length == 0); 
 	}
 
-	@Override
 	public boolean containsKey(Object key) {
 		String lowerCaseKey = ((String) key).toLowerCase();
 		return (headerMap.containsKey(lowerCaseKey) || lowerCaseKey.equals(CONTENT));
 	}
 
-	@Override
 	public boolean containsValue(Object value) {
 		if (headerMap.containsValue(value))
 			return true;
@@ -439,7 +435,6 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		return content.contains((String) value);
 	}
 
-	@Override
 	public String get(Object key) {
 		if (((String) key).equalsIgnoreCase(CONTENT)) {
 			return getContentUTF8();
@@ -447,7 +442,6 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		return headerMap.get(((String)key).toLowerCase());
 	}
 
-	@Override
 	public String put(String key, String value) {
 		String prevValue;
 		String lowerCaseKey = key.toLowerCase();
@@ -461,7 +455,6 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		return prevValue;
 	}
 
-	@Override
 	public String remove(Object key) {
 		String prevValue;
 		String lowerCaseKey = ((String)key).toLowerCase();
@@ -473,14 +466,12 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		return headerMap.remove(lowerCaseKey);
 	}
 
-	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
 		for (String key : m.keySet()) {
 			put(key, m.get(key));
 		}
 	}
 
-	@Override
 	public Set<String> keySet() {
 		Set<String> res = headerMap.keySet();
 		res.add(CONTENT);
@@ -507,20 +498,17 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		return res;
 	}
 	
-	@Override
 	public Collection<String> values() {
 		Collection<String> res = headerMap.values();
 		res.add(getContentUTF8());
 		return res;
 	}
 	
-	@Override
 	public Collection<String> valuesHeader() {
 		return headerMap.values();
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
 	public Set entrySet() {
 		return entrySet(true);
 	}
@@ -548,17 +536,14 @@ public class WarcRecord extends Text implements WarcRecordMap {
 			value = theValue;
 		}
 		
-		@Override
 		public K getKey() {
 			return key;
 		}
 
-		@Override
 		public V getValue() {
 			return value;
 		}
 
-		@Override
 		public V setValue(V theValue) {
 			V oldVal = value;
 			value = theValue;

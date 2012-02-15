@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
 
-import pigir.Common;
+import edu.stanford.pigir.Common;
 
 public class Peek extends EvalFunc<Tuple> {
 	protected final Logger logger = Logger.getLogger(getClass());

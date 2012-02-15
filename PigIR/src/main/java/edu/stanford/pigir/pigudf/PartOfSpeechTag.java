@@ -35,8 +35,8 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
  * <li>Only generate output for a small number of POS tags, as
  * 	   defined in standardPartsOfSpeechToOutput below. The different
  * 	   variants of grammatical entities are mapped into simple forms.
- *     For example: Noun singular, and noun plural are both tagged
- *     with Noun singluar (NN) for this option. 
+ *     For example: Noun, and noun singular are both tagged
+ *     with Noun (NN) for this option. 
  * <li>Only generate output for an explicitly provided set of parts of speech tags.
  * </ul>
  * 
@@ -72,12 +72,12 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
  * <li>VBD Verb, past tense
  * <li>VBG Verb, gerund or present participle
  * <li>VBN Verb, past participle
- * <li>VBP Verb, non�3rd person singular present
+ * <li>VBP Verb, non3rd person singular present
  * <li>VBZ Verb, 3rd person singular present
- * <li>WDT Wh�determiner
- * <li>WP Wh�pronoun
+ * <li>WDT Whdeterminer
+ * <li>WP Whpronoun
  * <li>WP$ Possessive wh�pronoun
- * <li>WRB Wh�adverb
+ * <li>WRB Whadverb
  * </ol>
  * 
  * @author "Andreas Paepcke"
@@ -93,8 +93,8 @@ public class PartOfSpeechTag  extends EvalFunc<Tuple>  {
 	@SuppressWarnings("serial")
 	private HashMap<String,String> standardPartsOfSpeechToOutput = new HashMap<String,String>() {
 		{
-			put("NN", "NN");      // Noun singular
-			put("NNS", "NN");     // Noun plural
+			put("NN", "NN");      // Noun
+			put("NNS", "NN");     // Noun singluar
 			put("NNP", "NNP");    // Proper noun
 			put("NNPS", "NNP");   // Proper noun plural
 			put("RB", "RB");      // Adverb
@@ -103,12 +103,16 @@ public class PartOfSpeechTag  extends EvalFunc<Tuple>  {
 			put("JJ", "JJ");      // Adjective
 			put("JJR", "JJ");     // Adjective comparative
 			put("JJS", "JJ");     // Adjective superlative
+			put("IN", "IN");      // Preposition (e.g. 'over')
+			put("PRP", "PRP");    // Personal pronoun (e.g. 'I')
+			put("PRP$", "PRP$");  // Possessive pronoun (e.g. 'my')
 			put("VB", "VB");      // Verb base form
 			put("VBD", "VB");     // Verb past tense
 			put("VBG", "VB");     // Verb gerund or present participle
 			put("VBN", "VB");     // Verb past participle
 			put("VBP", "VB");     // Verb non-3rd person singular present
 			put("VBZ", "VB");     // Verb 3rd person singular present
+			put("WRB", "WRB");    // WhAdverb
 		}
 	};
 	private boolean filterPOSTags = false;
@@ -246,7 +250,7 @@ public class PartOfSpeechTag  extends EvalFunc<Tuple>  {
 			}
 			//*******
 			word = wordAndTag[0];
-			tag  = wordAndTag[1];
+			tag  = wordAndTag[1].trim();
 			// Filter stopwords, check for end of tagged words: ".",".",
 			// If we are supposed to output only certain POS tags, check
 			// whether the current tag qualifies:

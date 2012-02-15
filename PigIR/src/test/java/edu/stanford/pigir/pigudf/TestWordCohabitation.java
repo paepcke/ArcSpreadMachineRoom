@@ -1,4 +1,4 @@
-package edu.stanford.pigir.pigudf.unittests;
+package edu.stanford.pigir.pigudf;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,8 +12,8 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pigir.Common;
-import pigir.pigudf.MakeWordPairDistances;
+import edu.stanford.pigir.Common;
+import edu.stanford.pigir.pigudf.MakeWordPairDistances;
 
 public class TestWordCohabitation {
 	
@@ -81,8 +81,8 @@ public class TestWordCohabitation {
 	}
 	
 	@SuppressWarnings("serial")
-	public static void main(String[] args) throws ExecException {
-		
+	@org.junit.Test
+	public void testAll() { 
 	/*
  	 * 	First call's input : ({(man,d1,0),(lives,d1,1),(sun,d1,2)})
 	 *	Second call's input: ({(Girl,d2,0),(child,d2,1),(lives,d2,2),(close,d2,3)})

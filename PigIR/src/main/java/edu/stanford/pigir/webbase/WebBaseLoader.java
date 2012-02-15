@@ -24,8 +24,8 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.util.ObjectSerializer;
 import org.apache.pig.impl.util.UDFContext;
 
-import pigir.pigudf.MultiTypeProperties;
-import pigir.warc.WarcRecord;
+import edu.stanford.pigir.pigudf.MultiTypeProperties;
+import edu.stanford.pigir.warc.WarcRecord;
 
 public class WebBaseLoader extends LoadFunc implements LoadPushDown {
 
@@ -184,7 +184,6 @@ public class WebBaseLoader extends LoadFunc implements LoadPushDown {
 	| getFeatures()
 	------------------------*/
 	
-	@Override
 	public List<OperatorSet> getFeatures() {
 		return Arrays.asList(LoadPushDown.OperatorSet.PROJECTION);
 	}
@@ -193,7 +192,6 @@ public class WebBaseLoader extends LoadFunc implements LoadPushDown {
 	| pushProjection()
 	------------------------*/
 
-	@Override
 	public RequiredFieldResponse pushProjection(
 			RequiredFieldList requiredFieldList) throws FrontendException {
         if (requiredFieldList == null)
