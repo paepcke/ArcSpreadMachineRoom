@@ -23,8 +23,6 @@ import edu.stanford.pigir.pigudf.PartOfSpeechTag;
  * @author paepcke
  *
  */
-
-
 public class POSTagger implements Iterator<List<String>> {
 
 	/**
@@ -116,7 +114,22 @@ public class POSTagger implements Iterator<List<String>> {
 	PartOfSpeechTag tagger = null;
 	List<Object> wordAndTagList = null;
 	Iterator<Object> wordAndTagListIterator = null;
+	String content;
+	HashMap<String,Set<String>> wordToTagMap = null;
 
+	/*---------------------------------
+	 * Constructor
+	 *--------------*/
+	
+	/**
+	 * Obtain a tagger instance for your content.
+	 * @param contentToTag: a String containing all of your content.
+	 */
+	private POSTagger(String contentToTag) {
+		content = contentToTag;
+	}
+
+	
 	// ------------------------------------------------------------   Public Methods -----------------------------------------	
 		
 	/*---------------------------------
@@ -124,64 +137,60 @@ public class POSTagger implements Iterator<List<String>> {
 	 *--------------*/
 	
 	/**
-	 * All text will be POS-tagged with the simplified tags.
-	 * @param content: material to be POS-tagged.
-	 * @return: An iterable that feeds out word-POSTag pairs.
+	 * All text will be POS-tagged with the simplified POS tags.
+	 * @return: An Iterable that feeds out word-POSTag pairs.
 	 */
-	public POSTagger tag(String content) {
+	public POSTagger tag() {
 		// No filtering by HTML tags, simplified tag set, no POS tag filtering:
 		return tagWorkhorse(content, null, USE_SIMPLIFIED_POS_TAGS, null);
 		
 	}
 	
 	/*---------------------------------
-	 * tag(String, String)
+	 * tag(String)
 	 *--------------*/
 
 	/**
-	 * Only text within provided HTML tags will be POS-tagged, with simplified tag set.
+	 * Only text within provided HTML tags will be POS-tagged, with simplified POS tag set.
 	 * 
-	 * @param content: material to be POS-tagged.
      * @param htmlTags: Space-separated string of HTML tags. Only text within those
      *                  HTML tags in <code>content</code> will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
-	 * @return: An iterable that feeds out word-POSTag pairs.
+	 * @return: An Iterable that feeds out word-POSTag pairs.
 	 */
-	public POSTagger tag(String content, String htmlTags) {
+	public POSTagger tag(String htmlTags) {
     	// Filtering by HTML tags, simplified tag set, no POS tag filtering:
 		return tagWorkhorse(content, htmlTags, USE_SIMPLIFIED_POS_TAGS, null);
 	}
 	
 	/*---------------------------------
-	 * tag(String, String, boolean)
+	 * tag(String, boolean)
 	 *--------------*/
 
 	/**
 	 * Only text within provided HTML tags will be POS-tagged. The second
 	 * parameter controls whether only the simplified set of POS-tags should
-	 * be in the result.
-	 * @param content: material to be POS-tagged.
+	 * be used.
      * @param htmlTags: Space-separated string of HTML tags. Only text within those
-     *                  HTML tags in <code>content</code> will be POS-tagged. Example: "h1 p".
+     *                  HTML tags in this tagger's content will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
      * @param simplifiedPOSTags: Map very granular POS tags into a simplified set.
      *                  Pass <code>false</code> if full POS tag granularity is wanted.
-	 * @return: An iterable that feeds out word-POSTag pairs.
+	 * @return: An Iterable that feeds out word-POSTag pairs.
 	 */
 
-	public POSTagger tag(String content, String htmlTags, boolean simplifiedPOSTags) {
+	public POSTagger tag(String htmlTags, boolean simplifiedPOSTags) {
 		// Filter by HTML tags, simplified tag set dependent on in-parm, no POS tag filtering:
 		return tagWorkhorse(content, htmlTags, simplifiedPOSTags, null);
 	}
 	
 	/*---------------------------------
-	 * tag(String, String, boolean, String)
+	 * tag(String, boolean, String)
 	 *--------------*/
 
 	/**
 	 * Full control over all three behaviors.
 	 * 
-	 * @param content: material to be POS-tagged.
      * @param htmlTags: Space-separated string of HTML tags. Only text within those
      *                  HTML tags in <code>content</code> will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
@@ -189,10 +198,10 @@ public class POSTagger implements Iterator<List<String>> {
      *                  Pass <code>false</code> if full POS tag granularity is wanted.
      * @param posTagList: Space-separated list of POS tags to which output is to be limited.
      *                  Pass <code>null</code> if inapplicable.  
-	 * @return: An iterable that feeds out word-POSTag pairs.
+	 * @return: An Iterable that feeds out word-POSTag pairs.
 	 */
 	
-	public POSTagger tag(String content, String htmlTags, boolean simplifiedPOSTags, String posTags) {
+	public POSTagger tag(String htmlTags, boolean simplifiedPOSTags, String posTags) {
 		// All aspects explicitly controlled:
 		return tagWorkhorse(content, htmlTags, simplifiedPOSTags, posTags);
 	}
@@ -201,6 +210,9 @@ public class POSTagger implements Iterator<List<String>> {
 	 * hasNext 
 	 *--------------*/
 
+	/* (non-Javadoc)
+	 * @see java.util.Iterator#hasNext()
+	 */
 	public boolean hasNext() {
 		return wordAndTagListIterator.hasNext();
 	}
@@ -209,6 +221,12 @@ public class POSTagger implements Iterator<List<String>> {
 	 * next 
 	 *--------------*/
 	
+	/* (non-Javadoc)
+	 * @see java.util.Iterator#next()
+	 * @return: Returns a list of two strings: the first
+	 * is a word from the tagger's content, the second
+	 * is the corresponding tag.
+	 */
 	public List<String> next() {
 		BinSedesTuple nextWordTagTuple = (BinSedesTuple) wordAndTagListIterator.next();
 		final List<Object> nextWordTagList = nextWordTagTuple.getAll();
@@ -226,8 +244,25 @@ public class POSTagger implements Iterator<List<String>> {
 	 * getAll() 
 	 *--------------*/
 	
+	/**
+	 * Obtain all of the result packaged in a 
+	 * HashMap. This Map associates words with a Set of all
+	 * POS tags that were assigned to that word anywhere
+	 * in the content. Often this set will just have one
+	 * POS tag member. But some words might have different
+	 * tags in different contexts.
+	 * @return: a HashMap<String, Set<String>> from a content
+	 * word to a set with all the POS tags assigned to that
+	 * word. 
+	 */
 	public HashMap<String, Set<String>> getAll() {
-		HashMap<String, Set<String>> wordToTagMap = new HashMap<String, Set<String>>();
+		// Even if wordToTagMap exists from a prior
+		// call to getAll(), we destroy that one, and
+		// start over, because a new tag() call might
+		// have been made, changing the POS tags and 
+		// words:
+		wordToTagMap = new HashMap<String, Set<String>>();
+
 		try {
 			for (Object wordTagTuple : wordAndTagList) {
 				String word   = (String) ((BinSedesTuple) wordTagTuple).get(0);
@@ -237,6 +272,7 @@ public class POSTagger implements Iterator<List<String>> {
 					allPOSTagsForWord = new HashSet<String>();
 				}
 				allPOSTagsForWord.add(posTag);
+				wordToTagMap.put(word, allPOSTagsForWord);
 			} 
 		} catch (ExecException e) {
 				// Debug if this ever happens:
@@ -255,14 +291,6 @@ public class POSTagger implements Iterator<List<String>> {
 	
 	// ------------------------------------------------------------    Private Methods -----------------------------------------
 	
-	/*---------------------------------
-	 * Initializer
-	 *--------------*/
-	
-	private POSTagger(List<Object> taggingResult) {
-		wordAndTagList = taggingResult;
-		wordAndTagListIterator = wordAndTagList.iterator();
-	}
 	
 	/*---------------------------------
 	 * tagWorkhorse 
@@ -285,6 +313,7 @@ public class POSTagger implements Iterator<List<String>> {
 			e1.printStackTrace();
 		}
 		wordAndTagList = result.getAll();
+		wordAndTagListIterator = wordAndTagList.iterator();
 		return this;
 	}
 
@@ -296,20 +325,33 @@ public class POSTagger implements Iterator<List<String>> {
 	 *--------------*/
 	
 	/**
-	 * @param args
+	 * This module is intended for use with applications.
+	 * Here is a runnable example.
+	 * @param args: no command line arguments are expected.
 	 */
 	public static void main(String[] args) {
 		String content = "<html><head></head><body><h1>Why I am so famous</h1>I will tell you why that is!</body></html>";
-		//Iterator<List<String>> wordTagIterator = POSTagger.tag(content, "h1");
+		
+		// Get a tagger object for this content:
 		POSTagger tagger = new POSTagger(content);
 
+		// Request POS tagging only of text within 'h1' HTML tags:
+		tagger.tag("h1");
+		// The tagger is an Iterator that feeds out
+		// lists of two strings: a word, and its tag.
+		// Cycle through that iterator:
 		while (tagger.hasNext()) {
 			List<String> wordTagPair = (List<String>) tagger.next();
 			System.out.println("Word: " + wordTagPair.get(0) + "; Tag: " + wordTagPair.get(1));
 		}
 		
-		// Alternatively: get a HashMap<String,Set<String>>: each word 
-		// in 'content' maps to a set of POS tags that appeared for that word:
+		// Alternatively: get all results in a single HashMap. 
+		// That map associates each word with a set of all POS
+		// tags with which that word was tagged in your content.
+		// Specifically, the Map is a HashMap<String,Set<String>>. 
+		System.out.println("And now the same, using the getAll() method...");
+		System.out.println("The square brackets indicate Set objects containing");
+		System.out.println("all of the POS tags assigned to the corresponding word:");
 		HashMap<String, Set<String>> wordToTagsMap = tagger.getAll();
 		for (String word : wordToTagsMap.keySet()) {
 			System.out.println("Word: " + word + "; Tags: " + wordToTagsMap.get(word));
