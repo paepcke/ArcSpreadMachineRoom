@@ -148,10 +148,10 @@ public class WbInputFormat extends InputFormat<WbInputSplit,Text> {
 		// First, if user specified a 'firstSite', skip all entries up to
 		// that site:
 		boolean foundIt = false;
-		if (!distributorContact.startSite.isEmpty()) {
+		if (!distributorContact.getStartSite().isEmpty()) {
 			siteListReader.mark(MAX_SITE_LIST_LINE_LEN);
 			while ((siteAndNumPages = siteListReader.readLine()) != null) {
-				if (siteAndNumPages.startsWith(distributorContact.startSite)) {
+				if (siteAndNumPages.startsWith(distributorContact.getStartSite())) {
 					// Have code below re-read this entry in the site list:
 					siteListReader.reset();
 					foundIt = true;
@@ -161,7 +161,7 @@ public class WbInputFormat extends InputFormat<WbInputSplit,Text> {
 			}
 			// Did not find the startSite entry. Complain:
 			if (!foundIt) {
-				String errMsg = "LOAD command called for '" + distributorContact.startSite + "' to be the first site to retrieve. That site does not exist in this crawl " +
+				String errMsg = "LOAD command called for '" + distributorContact.getStartSite() + "' to be the first site to retrieve. That site does not exist in this crawl " +
 				"(" + distributorContact.getCrawlName() +
 				" at " + distributorContact.getDistributorMachineName() + ":" + distributorContact.getDistributorPort() + ".";
 				logger.error(errMsg);
@@ -206,7 +206,7 @@ public class WbInputFormat extends InputFormat<WbInputSplit,Text> {
 				siteListEntries.add(new SiteListEntry(siteName, numPagesThisSite, totalNumPages, ++crawlPos));
 			// If user's LOAD command specified an end site, check
 			// whether this one was it:
-			if (!distributorContact.endSite.isEmpty() && siteName.equalsIgnoreCase(distributorContact.endSite))
+			if (!distributorContact.getEndSite().isEmpty() && siteName.equalsIgnoreCase(distributorContact.getEndSite()))
 				break;
 			// If we already have the number of pages we need, quit:
 			if ((distributorContact.getNumPagesWanted() != Constants.ALL_PAGES_WANTED) && 

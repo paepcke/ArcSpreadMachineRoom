@@ -22,8 +22,10 @@
 
 package edu.stanford.pigir.webbase.wbpull.webStream;
 
+import java.net.UnknownHostException;
 import java.util.Iterator;
 
+import edu.stanford.pigir.webbase.DistributorContact;
 import edu.stanford.pigir.webbase.WbRecord;
 
 
@@ -37,8 +39,11 @@ public class WebStreamIterator extends WebStream implements Iterator<WbRecord> {
 	public WebStreamIterator(String ip, String port, int totalNumPages) {
 		super(ip, port, totalNumPages);
 	}
+	
+	public WebStreamIterator(DistributorContact distribContact) throws UnknownHostException {
+		super(distribContact);
+	}
 
-	@Override
 	public boolean hasNext() {
 		if(currentPage != null)
 			return true;
@@ -47,7 +52,6 @@ public class WebStreamIterator extends WebStream implements Iterator<WbRecord> {
 		return currentPage != null;
 	}
 
-	@Override
 	public WbRecord next() {
 		if(currentPage != null) {
 			WbRecord temp = currentPage;
@@ -56,8 +60,7 @@ public class WebStreamIterator extends WebStream implements Iterator<WbRecord> {
 		}
 		return this.getNPages(1).get(0);
 	}
-
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

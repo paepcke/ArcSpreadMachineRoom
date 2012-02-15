@@ -4,7 +4,7 @@
 
   <groupId>PigIR</groupId>
   <artifactId>PigIR</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>PigIR</name>
@@ -31,8 +31,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <version>4.10</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -43,11 +42,6 @@
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.6.1</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.jms</groupId>
-      <artifactId>jms</artifactId>
-      <version>1.1</version>
     </dependency>    
     <dependency>
       <groupId>stanford-postagger</groupId>
@@ -68,8 +62,26 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.15</version>
-    </dependency>  
+      <exclusions>
+	<exclusion>
+	  <groupId>com.sun.jmx</groupId>
+	  <artifactId>jmxri</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>com.sun.jdmk</groupId>
+	  <artifactId>jmxtools</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>javax.jms</groupId>
+	  <artifactId>jms</artifactId>
+	</exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
-  <description>Pig/Hadoop support for information retrieval from Stanford WebBase and WARC files.</description>
+
+
+
+
+  <description>Pig/Hadoop support for information retrieval from Stanford WebBase and WARC files. Also: direct streaming of pages from WebBase, bypassing Hadoop.</description>
 </project>

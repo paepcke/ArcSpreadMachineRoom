@@ -18,6 +18,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 
 import edu.stanford.pigir.Common;
 import edu.stanford.pigir.webbase.Constants;
+import edu.stanford.pigir.webbase.DistributorContact;
 import edu.stanford.pigir.webbase.Metadata;
 import edu.stanford.pigir.webbase.WbRecord;
 import edu.stanford.pigir.webbase.WbRecordFactory;
@@ -49,8 +50,101 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	|  Constructors
     ------------------------*/
 	
+	/**
+	 * Obtain a WebBase stream iterator. The supplied distribContact
+	 * is assumed to hold all information the caller cares about, in
+	 * addition to the crawl name: number of pages, start site (might
+	 * be null to indicate first site), end site (might be null to indicate 
+	 * last site).
+	 *  
+	 * @param distribContact object holding the WebBase retrieval information.
+	 * @throws IOException
+	 */
+	public BufferedWebStreamIterator(DistributorContact distribContact) throws IOException {
+		this(distribContact.getDistributorMachineName(),
+			 distribContact.getDistributorPort(),
+			 distribContact.getStartSite(),
+			 distribContact.getEndSite(),
+			 distribContact.getNumPagesWanted());
+	}
+	
+	/**
+	 * Obtain a WebBase stream iterator. The supplied distribContact
+	 * is assumed to hold all information the caller cares about, in
+	 * addition to the crawl name: number of pages, start site (might
+	 * be null to indicate first site), end site (might be null to indicate 
+	 * last site). But the number of desired pages provided in this call
+	 * overrides the number held in the distribContact.
+	 *  
+	 * @param distribContact object holding the WebBase retrieval information.
+	 * @param numPages is the number of pages to retrieve from the WebBase stream.
+	 * @throws IOException
+	 */
+
+	public BufferedWebStreamIterator(DistributorContact distribContact, int numPages) throws IOException {
+		this(distribContact.getDistributorMachineName(),
+			 distribContact.getDistributorPort(),
+			 distribContact.getStartSite(),
+			 distribContact.getEndSite(),
+			 numPages);
+	}
+	
+	/**
+	 * Obtain a WebBase stream iterator. The supplied distribContact
+	 * is assumed to hold all information the caller cares about, in
+	 * addition to the crawl name: number of pages, start site (might
+	 * be null to indicate first site), end site (might be null to indicate 
+	 * last site). But the desired start site provided in this call
+	 * overrides the start site held in the distribContact.
+	 *  
+	 * @param distribContact object holding the WebBase retrieval information.
+	 * @param numPages is the number of pages to retrieve from the WebBase stream.
+	 * @param startSite names the first Web site to be retrieved. A value of
+	 * 		  null indicates the first site.
+	 * @throws IOException
+	 */
+	public BufferedWebStreamIterator(DistributorContact distribContact,
+									 String startSite) throws IOException {
+		this(distribContact.getDistributorMachineName(),
+			 distribContact.getDistributorPort(),
+			 startSite,
+			 null, // no end site
+			 distribContact.getNumPagesWanted());
+	}
+
+	/**
+	 * Obtain a WebBase stream iterator. The supplied distribContact
+	 * is assumed to hold all information the caller cares about, in
+	 * addition to the crawl name: number of pages, start site (might
+	 * be null to indicate first site), end site (might be null to indicate 
+	 * last site). But the desired start and end sites provided in this call
+	 * override the start and end sites held in the distribContact.
+	 *  
+	 * @param distribContact object holding the WebBase retrieval information.
+	 * @param numPages is the number of pages to retrieve from the WebBase stream.
+	 * @param startSite names the first Web site to be retrieved. A value of
+	 * 		  null indicates the first site.
+	 * @param endSite names the last Web site to be retrieved. A value of
+	 *        null indicates the last site.
+	 * @throws IOException
+	 */
+	
+	public BufferedWebStreamIterator(DistributorContact distribContact,
+									 String startSite,
+									 String endSite) throws IOException {
+		this(distribContact.getDistributorMachineName(),
+			 distribContact.getDistributorPort(),
+			 startSite,
+			 endSite,
+			 distribContact.getNumPagesWanted());
+	}
+	
 	public BufferedWebStreamIterator(String ip, String port, String startSite, String endSite, int totalNumPages) throws IOException {
 		this(ip, Integer.parseInt(port), startSite, endSite, totalNumPages);
+	}
+	
+	public BufferedWebStreamIterator(String ip, String port, int totalNumPages) throws IOException {
+		this(ip, port, null, null, totalNumPages);
 	}
 	
 	public BufferedWebStreamIterator(String machineName, int distribDemonPort, String startSite, String endSite, int totalNumPages) throws IOException {
@@ -75,9 +169,9 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 		
 		// Ask the distributor demon for a distributor:		
 		String distribDemonRequest = "new,0," + 
-									 startSite + 
+									 (startSite == null ? "," : startSite) + 
+									 (endSite   == null ? "," : endSite) + 
 									 "," + 
-									 endSite + "," + 
 									 System.getProperty("user.name") + "," +
 									 Constants.APPLICATION_ID +
 									 "\r\n";
@@ -200,7 +294,6 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	| hasNext() 
 	------------------------*/
 	
-	@Override
 	public boolean hasNext() {
 		if (wbRecordQueue.isEmpty())
 			try {
@@ -215,7 +308,6 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	| next() 
 	------------------------*/
 	
-	@Override
 	public WbRecord next() {
 		if (wbRecordQueue.isEmpty())
 			try {
@@ -232,7 +324,6 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	| remove()
 	------------------------*/
 	
-	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

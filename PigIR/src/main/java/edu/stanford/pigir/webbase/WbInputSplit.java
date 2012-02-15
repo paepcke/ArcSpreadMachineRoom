@@ -62,7 +62,6 @@ public class WbInputSplit extends InputSplit implements Writable {
 		return "WbInputSplit<" + startSite + "->" + endSite + ":" + numPages + ">";
 	}
 
-	@Override
 	public void write(DataOutput out) throws IOException {
 		Text.writeString(out, startSite);
 		Text.writeString(out, endSite);
@@ -70,7 +69,6 @@ public class WbInputSplit extends InputSplit implements Writable {
 		out.writeInt(numPages);
 	}
 	
-	@Override
 	public void readFields(DataInput in) throws IOException {
 		startSite = Text.readString(in);
 		endSite = Text.readString(in);

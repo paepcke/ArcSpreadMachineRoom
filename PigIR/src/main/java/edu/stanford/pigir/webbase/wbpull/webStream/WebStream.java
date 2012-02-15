@@ -26,11 +26,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Vector;
 
 import edu.stanford.pigir.Common;
+import edu.stanford.pigir.webbase.DistributorContact;
 import edu.stanford.pigir.webbase.Metadata;
 import edu.stanford.pigir.webbase.WbRecord;
 import edu.stanford.pigir.webbase.WbRecordFactory;
@@ -61,6 +63,18 @@ public abstract class WebStream
 	public WebStream(String ip, String port, int totalNumPages)
 	{
 		this(ip, Integer.parseInt(port), totalNumPages);
+	}
+	
+	public WebStream(DistributorContact distribContact) throws UnknownHostException 
+	{
+		this.machineName = distribContact.getDistributorMachineName();
+		this.port = distribContact.getDistributorPort();
+		this.numPagesRequested = distribContact.getNumPagesWanted();
+		this.totalNumPagesRetrieved = 0;
+	}
+	
+	public static DistributorContact getDistributorContact(String crawlName, int numPagesWanted, String startSite, String endSite) throws IOException {
+		return DistributorContact.getCrawlDistributorContact(crawlName, numPagesWanted, startSite, endSite);
 	}
 	
 	public String getMachineName() {
@@ -195,5 +209,9 @@ public abstract class WebStream
 			return null;
 		}
 		return pages;
+	}
+	
+	InetAddress getIPFromMachineName(String machineName) throws UnknownHostException {
+		return InetAddress.getByName(machineName);
 	}
 }

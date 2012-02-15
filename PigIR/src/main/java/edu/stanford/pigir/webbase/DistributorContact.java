@@ -25,8 +25,8 @@ import edu.stanford.pigir.pigudf.AsciiStringOutputStream;
  * Obtains and stores the contact information for one crawl's
  * distributor demon. 
  * 
- * To obtain a distributor demon contact, use 
- * DistributorContact.getCrawlDistributorAddr(crawlName, crawlType)
+ * To obtain a distributor demon contact, use
+ * getCrawlDistributorContact(String crawlName, int numPagesWanted, String startSite, String endSite) 
  * 
  * @author paepcke
  *
@@ -43,8 +43,8 @@ public class DistributorContact implements Writable, Serializable {
 	int numPages = -1;
 	int numPagesWanted = Constants.ALL_PAGES_WANTED;
 	String crawlName = null;
-	String startSite = null;
-	String endSite = null;
+	private String startSite = null;
+	private String endSite = null;
 	String crawlType = null;
 	String siteListPath = null;
 
@@ -57,6 +57,108 @@ public class DistributorContact implements Writable, Serializable {
     		put("un", "unknown");
     	}
     };
+	
+	/*-----------------------------------------------------
+	| getCrawlDistributorContact() 
+	------------------------*/
+
+	/**
+	 * Obtain a distributor contact object to use for obtaining
+	 * BufferedWebStreamIterator objects. 
+	 * @param crawlName is the name of the crawl as obtained from the Wibbi Web page.
+	 * @param numPagesWanted the number of pages to be retrieved.
+	 * @return
+	 * @throws IOException
+	 */
+	public static DistributorContact getCrawlDistributorContact(String crawlName, int numPagesWanted) throws IOException {
+		return DistributorContact.getCrawlDistributorContact(crawlName, numPagesWanted, null, null);
+	}
+	
+	/**
+	 * Obtain a distributor contact object to use for obtaining
+	 * BufferedWebStreamIterator objects. 
+	 *
+	 * Uses, or refreshes and then uses the crawl directory list to find the contact
+	 * information for one crawl's distributor demon.
+	 *  
+	 * @param crawlName
+	 * @param numPagesWanted Integer
+	 * @param startSite
+	 * @param endSite
+	 * @return a DistributorContact instance that holds all information necessary to 
+	 * request a distributor. If no distributor is found for the given crawl name,
+	 * returns null.
+	 * @throws IOException
+	 */
+	public static DistributorContact getCrawlDistributorContact(String crawlName, int numPagesWanted, String startSite, String endSite) 
+	throws IOException {
+
+		File directoryListFile;
+
+
+		directoryListFile = new File(Constants.LOCAL_CRAWL_DIRECTORY_FILE_NAME);
+		if (!directoryListFile.exists() || isOld(directoryListFile))
+			refreshDirectoryListFile();
+		crawlName = crawlName.trim();
+
+		// Derive the crawl type from the crawl name. The
+		// element after the last '.' is a two-char code for
+		// the type: tx for text, au for audio, etc (see WbMimeTypes above).
+		File crawlNameFile = new File(crawlName);
+		String crawlFileNamePart = crawlNameFile.getName();
+		String[] crawlNameElements = crawlFileNamePart.split("\\.");
+		if (crawlNameElements.length < 1) {
+			String errMsg = "Bad crawl name. All crawl names have an extension '.xx' where 'xx' is a mime type code, like 'tx' or 'au'. This name was: " + crawlFileNamePart;
+			logger.error(errMsg);
+			throw new IOException(errMsg);
+		}
+		String mimeTypeCode = crawlNameElements[crawlNameElements.length - 1];
+		String crawlMimeType = wbMimeTypes.get(mimeTypeCode);
+		if (crawlMimeType == null)
+			crawlMimeType = "text";
+
+		FileInputStream fstream = new FileInputStream(Constants.LOCAL_CRAWL_DIRECTORY_FILE_NAME);
+		BufferedReader buf = new BufferedReader(new InputStreamReader(fstream));
+		String line;
+		while((line = buf.readLine()) != null) {
+
+			line = line.trim(); //trim any leading/trailing whitespace in the line
+
+			if(line.indexOf(crawlName) != -1) {
+				String[] crawlWords = line.split(",");
+				String machine = crawlWords[Constants.CRAWL_DIR_DISTRIB_DEMON_MACHINE_NAME];
+				// Machine name will be WB0 if the crawl is not currently mounted:
+				if (machine.equals(Constants.CRAWL_UNAVAILABLE_MACHINE_NAME))
+					throw new IOException("Crawl '" + crawlName + ":" + crawlMimeType + " is not currently mounted, or may be mis-spelled.");
+				String port = crawlWords[Constants.CRAWL_DIR_DISTRIB_DEMON_MACHINE_PORT];
+				String numPagesStr = crawlWords[Constants.CRAWL_DIR_NUM_PAGES];
+				int numPages;
+				try {
+					numPages = Integer.parseInt(numPagesStr);
+				} catch (NumberFormatException e) {
+					String errMsg = "Badly formatted number-of-pages spec found in crawl list directory:" +
+					"'" + numPagesStr +
+					"'. In entry '" +
+					line +  "'.";
+					logger.error(errMsg);
+					throw new IOException(errMsg);
+				}
+				String siteListPath = crawlWords[Constants.CRAWL_DIR_SITELIST_FILENAME];
+				return new DistributorContact(machine + Constants.WB_DOMAIN, // the .stanford.edu
+						port,
+						numPages,
+						numPagesWanted,
+						startSite,
+						endSite,
+						crawlName,
+						crawlMimeType,
+						siteListPath);
+			}
+		}
+		logger.debug("No distributor address found for " + crawlName);
+		return null;
+	}
+	
 	
 	/*-----------------------------------------------------
 	| Constructors 
@@ -158,8 +260,8 @@ public class DistributorContact implements Writable, Serializable {
 			numPagesWanted = theNumPages;
 		else
 			numPagesWanted = theNumPagesWanted;
-		startSite = theStartSite;
-		endSite   = theEndSite;
+		setStartSite(theStartSite);
+		setEndSite(theEndSite);
 		crawlName = theCrawlName;
 		crawlType = theCrawlType;
 		siteListPath = theSiteListPath;
@@ -206,91 +308,6 @@ public class DistributorContact implements Writable, Serializable {
 				theCrawlType,
 				theSiteListPath);
 	}
-	
-	/*-----------------------------------------------------
-	| getCrawlDistributorContact() 
-	------------------------*/
-	
-	/**
-	 * Use, or refresh and then use the crawl directory list to find the contact
-	 * information for one crawl's distributor demon.
-	 *  
-	 * @param crawlName
-	 * @param crawlType
-	 * @return a DistributorContact instance that holds all information necessary to 
-	 * request a distributor. If no distributor is found for the given crawl name,
-	 * returns null.
-	 * @throws IOException
-	 */
-	public static DistributorContact getCrawlDistributorContact(String crawlName, int numPagesWanted, String startSite, String endSite) 
-	throws IOException {
-
-		File directoryListFile;
-
-
-		directoryListFile = new File(Constants.LOCAL_CRAWL_DIRECTORY_FILE_NAME);
-		if (!directoryListFile.exists() || isOld(directoryListFile))
-			refreshDirectoryListFile();
-		crawlName = crawlName.trim();
-
-		// Derive the crawl type from the crawl name. The
-		// element after the last '.' is a two-char code for
-		// the type: tx for text, au for audio, etc (see WbMimeTypes above).
-		File crawlNameFile = new File(crawlName);
-		String crawlFileNamePart = crawlNameFile.getName();
-		String[] crawlNameElements = crawlFileNamePart.split("\\.");
-		if (crawlNameElements.length < 1) {
-			String errMsg = "Bad crawl name. All crawl names have an extension '.xx' where 'xx' is a mime type code, like 'tx' or 'au'. This name was: " + crawlFileNamePart;
-			logger.error(errMsg);
-			throw new IOException(errMsg);
-		}
-		String mimeTypeCode = crawlNameElements[crawlNameElements.length - 1];
-		String crawlMimeType = wbMimeTypes.get(mimeTypeCode);
-		if (crawlMimeType == null)
-			crawlMimeType = "text";
-
-		FileInputStream fstream = new FileInputStream(Constants.LOCAL_CRAWL_DIRECTORY_FILE_NAME);
-		BufferedReader buf = new BufferedReader(new InputStreamReader(fstream));
-		String line;
-		while((line = buf.readLine()) != null) {
-
-			line = line.trim(); //trim any leading/trailing whitespace in the line
-
-			if(line.indexOf(crawlName) != -1) {
-				String[] crawlWords = line.split(",");
-				String machine = crawlWords[Constants.CRAWL_DIR_DISTRIB_DEMON_MACHINE_NAME];
-				// Machine name will be WB0 if the crawl is not currently mounted:
-				if (machine.equals(Constants.CRAWL_UNAVAILABLE_MACHINE_NAME))
-					throw new IOException("Crawl '" + crawlName + ":" + crawlMimeType + " is not currently mounted, or may be mis-spelled.");
-				String port = crawlWords[Constants.CRAWL_DIR_DISTRIB_DEMON_MACHINE_PORT];
-				String numPagesStr = crawlWords[Constants.CRAWL_DIR_NUM_PAGES];
-				int numPages;
-				try {
-					numPages = Integer.parseInt(numPagesStr);
-				} catch (NumberFormatException e) {
-					String errMsg = "Badly formatted number-of-pages spec found in crawl list directory:" +
-					"'" + numPagesStr +
-					"'. In entry '" +
-					line +  "'.";
-					logger.error(errMsg);
-					throw new IOException(errMsg);
-				}
-				String siteListPath = crawlWords[Constants.CRAWL_DIR_SITELIST_FILENAME];
-				return new DistributorContact(machine + Constants.WB_DOMAIN, // the .stanford.edu
-						port,
-						numPages,
-						numPagesWanted,
-						startSite,
-						endSite,
-						crawlName,
-						crawlMimeType,
-						siteListPath);
-			}
-		}
-		logger.debug("No distributor address found for " + crawlName);
-		return null;
-	}
-	
 	
 	/*-----------------------------------------------------
 	| isOld() 
@@ -378,8 +395,8 @@ public class DistributorContact implements Writable, Serializable {
 		 out.writeUTF(distributorDate);
 		 out.writeInt(numPages);
 		 out.writeInt(numPagesWanted);
-		 out.writeUTF(startSite);
-		 out.writeUTF(endSite);
+		 out.writeUTF(getStartSite());
+		 out.writeUTF(getEndSite());
 		 out.writeUTF(crawlName);
 		 out.writeUTF(crawlType);
 		 out.writeUTF(siteListPath);
@@ -389,7 +406,6 @@ public class DistributorContact implements Writable, Serializable {
 	| write() (for Writable) 
 	------------------------*/
 
-	@Override
 	public void write(DataOutput out) throws IOException {
 		writeObject(out);
 	}
@@ -405,8 +421,8 @@ public class DistributorContact implements Writable, Serializable {
 		 distributorDate	    = in.readUTF();
 		 numPages				= in.readInt();
 		 numPagesWanted         = in.readInt();
-		 startSite 				= in.readUTF();
-		 endSite 				= in.readUTF();
+		 setStartSite(in.readUTF());
+		 setEndSite(in.readUTF());
 		 crawlName				= in.readUTF();
 		 crawlType				= in.readUTF();
 		 siteListPath			= in.readUTF();
@@ -416,7 +432,6 @@ public class DistributorContact implements Writable, Serializable {
 	| readFields() (For Writable) 
 	------------------------*/
 	 
-	@Override
 	public void readFields(DataInput in) throws IOException {
 		try {
 			readObject(in);
@@ -514,6 +529,22 @@ public class DistributorContact implements Writable, Serializable {
 		return numPagesWanted;
 	}
 	
+	public String getStartSite() {
+		return startSite;
+	}
+
+	public String getEndSite() {
+		return endSite;
+	}
+
+	public void setEndSite(String endSite) {
+		this.endSite = endSite;
+	}
+
+	public void setStartSite(String startSite) {
+		this.startSite = startSite;
+	}
+
 	public String getCrawlName() {
 		return crawlName;
 	}
