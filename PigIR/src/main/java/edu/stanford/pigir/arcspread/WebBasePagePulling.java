@@ -6,7 +6,12 @@ import edu.stanford.pigir.webbase.DistributorContact;
 import edu.stanford.pigir.webbase.WbRecord;
 import edu.stanford.pigir.webbase.wbpull.webStream.BufferedWebStreamIterator;
 
-class TestWebPagePulling {
+/**
+ * @author paepcke
+ * Example of an application that pulls Web pages from
+ * WebBase.
+ */
+class WebPagePulling {
 	/**
 	 * Method pulls 2 pages from the WebBase crawl called "09-2004".
 	 * These crawl names can be found at:
@@ -37,7 +42,7 @@ class TestWebPagePulling {
 	}
 
 	public static void main(String[] argv) throws IOException {
-		new TestWebPagePulling().trial("09-2004");
+		new WebPagePulling().trial("09-2004");
 		System.out.println("Done");
 	}
 }

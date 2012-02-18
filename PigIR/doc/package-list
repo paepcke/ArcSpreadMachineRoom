@@ -1,0 +1,7 @@
+edu.stanford.pigir
+edu.stanford.pigir.arcspread
+edu.stanford.pigir.pigudf
+edu.stanford.pigir.warc
+edu.stanford.pigir.webbase
+edu.stanford.pigir.webbase.wbpull.handler
+edu.stanford.pigir.webbase.wbpull.webStream
