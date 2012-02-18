@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.BinSedesTuple;
 import org.apache.pig.data.Tuple;
@@ -127,7 +126,7 @@ public class POSTagger implements Iterator<List<String>> {
 	 * Obtain a tagger instance for your content.
 	 * @param contentToTag: a String containing all of your content.
 	 */
-	private POSTagger(String contentToTag) {
+	public POSTagger(String contentToTag) {
 		content = contentToTag;
 	}
 
@@ -288,7 +287,7 @@ public class POSTagger implements Iterator<List<String>> {
 	 *--------------*/
 
 	public void remove() {
-		throw new NotImplementedException("Cannot remove items from POS tag result.");
+		throw new RuntimeException("Cannot remove items from POS tag result.");
 	}
 	
 	// ------------------------------------------------------------    Private Methods -----------------------------------------

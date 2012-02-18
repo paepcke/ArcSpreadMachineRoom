@@ -79,9 +79,36 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.dstovall</groupId>
+	<artifactId>onejar-maven-plugin</artifactId>
+	<version>1.4.4</version>
+	<executions>
+	  <execution>
+	    <configuration>
+	      <onejarVersion>0.97</onejarVersion>
+	      <!-- Optional, default is false -->
+	      <attachToBuild>true</attachToBuild>
+	      <!-- Optional, default is "onejar" -->
+	      <classifier>onejar</classifier>
+	    </configuration>
+	    <goals>
+	      <goal>one-jar</goal>
+	    </goals>
+	  </execution>
+	</executions>
+      </plugin>
+    </plugins>
+  </build>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>onejar-maven-plugin.googlecode.com</id>
+      <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+    </pluginRepository>
+  </pluginRepositories>
 
-
-
-  <description>Pig/Hadoop support for information retrieval from Stanford WebBase and WARC files. Also: direct streaming of pages from WebBase, bypassing Hadoop.</description>
+  <description>Pig/Hadoop support for information retrieval from Stanford WebBase and WARC files. Also: direct streaming of pages from WebBase, bypassing Hadoop, as well as application support for part of speech tagging, stopword management, and extraction of anchor text, image ALT, and Title texts.</description>
 </project>

@@ -1,4 +1,4 @@
-package edu.stanford.pigir.interactiveTests;
+package edu.stanford.pigir.arcspread;
 
 import java.io.IOException;
 
