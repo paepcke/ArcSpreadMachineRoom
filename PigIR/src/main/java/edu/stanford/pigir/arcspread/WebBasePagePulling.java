@@ -7,11 +7,11 @@ import edu.stanford.pigir.webbase.WbRecord;
 import edu.stanford.pigir.webbase.wbpull.webStream.BufferedWebStreamIterator;
 
 /**
- * @author paepcke
  * Example of an application that pulls Web pages from
  * WebBase.
+ * @author paepcke
  */
-class WebPagePulling {
+class WebBasePagePulling {
 	/**
 	 * Method pulls 2 pages from the WebBase crawl called "09-2004".
 	 * These crawl names can be found at:

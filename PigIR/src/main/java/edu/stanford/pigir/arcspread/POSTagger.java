@@ -19,95 +19,93 @@ import org.apache.pig.data.TupleFactory;
 import edu.stanford.pigir.pigudf.PartOfSpeechTag;
 
 /**
- * @author paepcke
- *
  * Facility to tag arbitrary text with part-of-speech tags. 
  * Special facilities are provided for HTML text.
+ *
+ * Provides part-of-speech tagging for HTML, and untagged text.
+ * Relies on the Stanford Part-of-Speech-Tagger. Four initializers
+ * are available to control the behavior of the tagger.
+ * 
+ * The tagging behavior of a POSTagger instance is set once and 
+ * for all by how it is created. Subsequently, the <code>tag</code>
+ * method may be called many times with different texts. 
+ * Behaviors based on three parameters to the initializer methods:
+ * <ul>
+ *     <li>Only generate output for text within a given set of HTML/XML tags.
+ *     <li>Only generate output for a small number of POS tags, as
+ *     	   defined in 'Simplified Part of Speech Tags' below. The normally
+ *     	   very fine grained variants of grammatical entities are mapped 
+ *     	   into simple forms.
+ *         For example: Noun (NN), and noun singular (NNS) are both tagged
+ *         with Noun (NN) if this option is <code>true</code> 
+ *     <li>Only generate output for an explicitly provided set of parts of speech tags.
+ * </ul>
+ * 
+ * Full list of POS tags:
+ * <ol>
+ * <li>CC Coordinating conjunction
+ * <li>CD Cardinal number
+ * <li>DT Determiner
+ * <li>EX Existential there
+ * <li>FW Foreign word
+ * <li>IN Preposition or subordinating conjunction
+ * <li>JJ Adjective
+ * <li>JJR Adjective, comparative
+ * <li>JJS Adjective, superlative
+ * <li>LS List item marker
+ * <li>MD Modal
+ * <li>NN Noun, singular or mass
+ * <li>NNS Noun, plural
+ * <li>NNP Proper noun, singular
+ * <li>NNPS Proper noun, plural
+ * <li>PDT Predeterminer
+ * <li>POS Possessive ending
+ * <li>PRP Personal pronoun
+ * <li>PRP$ Possessive pronoun
+ * <li>RB Adverb
+ * <li>RBR Adverb, comparative
+ * <li>RBS Adverb, superlative
+ * <li>RP Particle
+ * <li>SYM Symbol
+ * <li>TO to
+ * <li>UH Interjection
+ * <li>VB Verb, base form
+ * <li>VBD Verb, past tense
+ * <li>VBG Verb, gerund or present participle
+ * <li>VBN Verb, past participle
+ * <li>VBP Verb, non�3rd person singular present
+ * <li>VBZ Verb, 3rd person singular present
+ * <li>WDT Wh�determiner
+ * <li>WP Wh�pronoun
+ * <li>WP$ Possessive wh�pronoun
+ * <li>WRB Wh�adverb
+ * </ol>
+ * 
+ * <b>Simplified Parts of Speech Tags</b>
+ * 
+ * <ul>
+ *   <li>"SVN"    -->   "NN":   Noun</li>
+ *   <li>"NNS"   -->   "NN":   Noun singluar</li>
+ *   <li>"NNP"   -->   "NNP":  Proper noun</li>
+ *   <li>"NNPS"  -->   "NNP":  Proper noun plural</li>
+ *   <li>"RB"    -->   "RB":   Adverb</li>
+ *   <li>"RBR"  	-->   "RB":   Adverb comparative</li>
+ *   <li>"RBS"  	-->   "RB":   Adverb superlative</li>
+ *   <li>"JJ"    -->   "JJ":   Adjective</li>
+ *   <li>"JJR"  	-->   "JJ":   Adjective comparative</li>
+ *   <li>"JJS"  	-->   "JJ":   Adjective superlative</li>
+ *   <li>"IN"    -->   "IN":   Preposition (e.g. 'over')</li>
+ *   <li>"PRP$"  -->   "PRP$": Possessive pronoun (e.g. 'my')</li>
+ *   <li>"VB"    -->   "VB":   Verb base form</li>
+ *   <li>"VBD"  	-->   "VB":   Verb past tense</li>
+ *   <li>"VBG"  	-->   "VB":   Verb gerund or present participle</li>
+ *   <li>"VBN"  	-->   "VB":   Verb past participle</li>
+ *   <li>"VBP"  	-->   "VB":   Verb non-3rd person singular present</li>
+ *   <li>"VBZ"  	-->   "VB":   Verb 3rd person singular present</li>
+ * </ul>
+ * @author paepcke
  */
 public class POSTagger implements Iterator<List<String>> {
-
-	/**
-	 * Provides part-of-speech tagging for HTML, and untagged text.
-	 * Relies on the Stanford Part-of-Speech-Tagger. Four initializers
-	 * are available to control the behavior of the tagger.
-	 * 
-	 * The tagging behavior of a POSTagger instance is set once and 
-	 * for all by how it is created. Subsequently, the <code>tag</code>
-	 * method may be called many times with different texts. 
-	 * Behaviors based on three parameters to the initializer methods:
-	 * <ul>
-	 *     <li>Only generate output for text within a given set of HTML/XML tags.
-	 *     <li>Only generate output for a small number of POS tags, as
-	 *     	   defined in 'Simplified Part of Speech Tags' below. The normally
-	 *     	   very fine grained variants of grammatical entities are mapped 
-	 *     	   into simple forms.
-	 *         For example: Noun (NN), and noun singular (NNS) are both tagged
-	 *         with Noun (NN) if this option is <code>true</code> 
-	 *     <li>Only generate output for an explicitly provided set of parts of speech tags.
-	 * </ul>
-	 * 
-	 * Full list of POS tags:
-	 * <ol>
-	 * <li>CC Coordinating conjunction
-	 * <li>CD Cardinal number
-	 * <li>DT Determiner
-	 * <li>EX Existential there
-	 * <li>FW Foreign word
-	 * <li>IN Preposition or subordinating conjunction
-	 * <li>JJ Adjective
-	 * <li>JJR Adjective, comparative
-	 * <li>JJS Adjective, superlative
-	 * <li>LS List item marker
-	 * <li>MD Modal
-	 * <li>NN Noun, singular or mass
-	 * <li>NNS Noun, plural
-	 * <li>NNP Proper noun, singular
-	 * <li>NNPS Proper noun, plural
-	 * <li>PDT Predeterminer
-	 * <li>POS Possessive ending
-	 * <li>PRP Personal pronoun
-	 * <li>PRP$ Possessive pronoun
-	 * <li>RB Adverb
-	 * <li>RBR Adverb, comparative
-	 * <li>RBS Adverb, superlative
-	 * <li>RP Particle
-	 * <li>SYM Symbol
-	 * <li>TO to
-	 * <li>UH Interjection
-	 * <li>VB Verb, base form
-	 * <li>VBD Verb, past tense
-	 * <li>VBG Verb, gerund or present participle
-	 * <li>VBN Verb, past participle
-	 * <li>VBP Verb, non�3rd person singular present
-	 * <li>VBZ Verb, 3rd person singular present
-	 * <li>WDT Wh�determiner
-	 * <li>WP Wh�pronoun
-	 * <li>WP$ Possessive wh�pronoun
-	 * <li>WRB Wh�adverb
-	 * </ol>
-	 * 
-	 * <b>Simplified Parts of Speech Tags</b>
-	 * 
-     * "svn"    -->   "NN":   Noun
-     * "NNS"   -->   "NN":   Noun singluar
-     * "NNP"   -->   "NNP":  Proper noun
-     * "NNPS"  -->   "NNP":  Proper noun plural
-     * "RB"    -->   "RB":   Adverb
-     * "RBR"  	-->   "RB":   Adverb comparative
-     * "RBS"  	-->   "RB":   Adverb superlative
-     * "JJ"    -->   "JJ":   Adjective
-     * "JJR"  	-->   "JJ":   Adjective comparative
-     * "JJS"  	-->   "JJ":   Adjective superlative
-     * "IN"    -->   "IN":   Preposition (e.g. 'over')
-     * "PRP$"  -->   "PRP$": Possessive pronoun (e.g. 'my')
-     * "VB"    -->   "VB":   Verb base form
-     * "VBD"  	-->   "VB":   Verb past tense
-     * "VBG"  	-->   "VB":   Verb gerund or present participle
-     * "VBN"  	-->   "VB":   Verb past participle
-     * "VBP"  	-->   "VB":   Verb non-3rd person singular present
-     * "VBZ"  	-->   "VB":   Verb 3rd person singular present
-	 *
-	 **/
 	
 	final static boolean USE_SIMPLIFIED_POS_TAGS = true;
 	final static boolean USE_FULL_POS_TAGS = false;

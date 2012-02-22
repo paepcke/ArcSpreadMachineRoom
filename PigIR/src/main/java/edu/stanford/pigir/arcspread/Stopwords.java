@@ -9,8 +9,6 @@ import java.util.Set;
 import edu.stanford.pigir.pigudf.IsStopword;
 
 /**
- * @author paepcke
- *
  * Provides stopword services. Those services are
  * all provided as static methods. <code>isStopword()</code>
  * tests whether a given word is a stopword. Method
@@ -18,6 +16,7 @@ import edu.stanford.pigir.pigudf.IsStopword;
  * services. Method <code>setStopwords()</code> allows
  * callers to modify the stopword list. Methods for adding
  * and removing individual stopwords are provided as well. 
+ * @author paepcke
  */
 public class Stopwords extends IsStopword {
 

@@ -73,7 +73,7 @@ public class AnchorAltTitleExtractor {
 	/**
 	 * This class is intended to be used by applications.
 	 * Nonetheless, here is an example.
-	 * @param args
+	 * @param args: No command line arguments are expected.
 	 */
 	public static void main(String[] args) {
 		final boolean GET_ANCHOR_TEXT    = true;
