@@ -42,7 +42,7 @@ class WebBasePagePulling {
 	}
 
 	public static void main(String[] argv) throws IOException {
-		new WebPagePulling().trial("09-2004");
+		new WebBasePagePulling().trial("09-2004");
 		System.out.println("Done");
 	}
 }
