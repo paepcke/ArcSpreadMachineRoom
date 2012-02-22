@@ -1,3 +1,0 @@
-A = LOAD 'tmp/triplets.csv' USING PigStorage(',');
-DUMP A;
-B = ORDER A BY $0;

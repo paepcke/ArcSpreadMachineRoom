@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>PigIR Web Page Processing Facilities</title>
+</head>
+<body>
+Provides tools for processing Web pages in both Hadoop, and Java
+application contexts.
+
+Provides tools for processing Web pages, such as:
+<ul>
+  <li>Part-of-speech tagging (for Pig/Hadoop and Java applications).</li>
+  <li>Stopword management (<code>Class Stopwords</code>. (for
+         Pig/Hadoop and Java applications).</li> 
+  <li>Extraction of link anchor test, and image tag <code>ALT</code>
+      and </code>Title</code> attribute values. (for Pig/Hadoop and
+      Java applications).</li> 
+  <li>Iteration over Web pages in WebBase crawls (for Pig/Hadoop and
+      Java applications).</li> 
+  <li>Word count (for Pig/Hadoop context only).</li>
+  <li>Indexing Web crawls (for Pig/Hadoop context only).</li>
+  <li>Word pair distance analysis (for Pig/Hadoop context only).</li>
+  <li>HTML stripping (for Pig/Hadoop context only).</li>
+  <li>TF/IDF computation over crawls (for Pig/Hadoop context only).</li>
+</ul>
+Some of this functionality is available only for use with Pig in a
+Hadoop context. Others are available in Hadoop as well as from regular
+Java applications. These latter capabilities are part-of-speech
+tagging, stopword management, extraction of link anchor tags and img
+tag attributes, and iteration over WebBase crawls.
+</p>
+For examples and the top entry points for the Java application
+accessible facilities, consult the following:
+<ul>
+  <li>For stopword management, see the {@link
+      edu.stanford.pigir.arcspread.Stopwords
+      Stopwords main() method}.</li>
+  <li>For anchor text extraction, see the {@link
+      edu.stanford.pigir.arcspread.AnchorAltTitleExtractor
+      AnchorAltTitleExtractor main() method}.</li>
+  <li>For pulling crawl pages from WebBase, see the {@link
+      edu.stanford.pigir.arcspread.WebBasePagePulling
+      WebBasePagePulling main() method}.</li>
+  <li>For parts-of-speech-tagging, see the {@link
+      edu.stanford.pigir.arcspread.POSTagger
+      POSTagger main() method}.</li>
+</ul>
+</p>
+For the Pig/Hadoop facilities, please see the Bash scripts
+under <code>/src/main/pigScripts/CommandLineUtils</code> in the source
+tree. These scripts start the Pig jobs; the Java UDF classes are in
+that same directory tree.
+</p>
+You can also find information
+on <a href="http://paepcke.github.com/ArcSpreadDevInfo/#sec:pageProcessing">how
+to use this package
+with Maven</a>. 
+</body>
