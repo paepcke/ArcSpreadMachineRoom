@@ -1,6 +1,0 @@
-*.class
-target/*
-../WebBaseAccess
-.settings/*
-.classpath
-.project
