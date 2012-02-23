@@ -46,7 +46,7 @@
     <dependency>
       <groupId>stanford-postagger</groupId>
       <artifactId>tagger</artifactId>
-      <version>2012-02-06</version>
+      <version>2012-01-06</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pig</groupId>
