@@ -1,0 +1,73 @@
+#!/bin/bash
+
+#Set these variables based on your own evironment
+HADOOP_HOME=~/Hadoop/hadoop-0.20.203.0
+MAHOUT_HOME=~/Hadoop/mahout/trunk
+MAHOUT=${MAHOUT_HOME}/bin/mahout
+HADOOP=${HADOOP_HOME}/bin/hadoop
+
+USAGE="Usage: Cluster
+                         \t\t\t [{-h | --help}] \n
+                         \t\t\t [{-c | --clusterHome} <clusterHome>] (default is user home dir) \n
+                         \t\t\t [{-n | --numTopics} <numberOfTopics>] (default is 5) \n
+    \tExample: Cluster -ch /data/Clustering -nt 25 \n"
+
+#variables passed in by arguments
+CLUSTER_HOME=/user/`basename $HOME`
+NUM_TOPICS=5
+
+SHORTOPTS="hc:n:"
+LONGOPTS="help,clusterHome:,numTopics:"
+ARGS=`getopt -s bash --options=$SHORTOPTS  \
+  --longoptions=$LONGOPTS --name=$PROGNAME -- "$@"`
+
+eval set -- "$ARGS"
+
+while true; do
+    case $1 in
+        -h|--help)
+            echo -e $USAGE
+            exit 0
+            ;;
+        -c|--clusterHome)
+            shift
+            CLUSTER_HOME=$1
+            ;;
+        -n|--numTopics)
+            shift
+            NUM_TOPICS=$1
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            shift
+            break
+            ;;
+    esac
+   # Throw away the '--' that's added by getopt.
+   # The -- case above doesn't get hit when user
+   # forgets to put in any required args.
+   shift
+done
+
+#Create a sequence file from a directory of text files
+"$MAHOUT" seqdirectory --input ${CLUSTER_HOME}/To_Cluster \
+                       --output ${CLUSTER_HOME}/seqfiles
+                            
+#Create vectors from the sequence file created above
+"$MAHOUT" seq2sparse   --input         ${CLUSTER_HOME}/seqfiles     \
+                       --output        ${CLUSTER_HOME}/vectors      \
+                       --sequentialAccessVector                     \
+                       --namedVector                                \
+                       --maxDFPercent   75                                      
+                            
+#Perform LDA Clustering
+"$HADOOP" jar ./target/Clustering-1.0-SNAPSHOT.jar  \
+    --input     ${CLUSTER_HOME}/vectors/tf-vectors  \
+    --output    ${CLUSTER_HOME}/lda-results         \
+    --numTopics $NUM_TOPICS                         \
+    --maxIter   25                                  
+
+                            
