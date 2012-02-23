@@ -45,8 +45,8 @@
     </dependency>    
     <dependency>
       <groupId>stanford-postagger</groupId>
-      <artifactId>stanford-postagger-with-wsj-model</artifactId>
-      <version>3.0.4</version>
+      <artifactId>tagger</artifactId>
+      <version>2012-02-06</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pig</groupId>
