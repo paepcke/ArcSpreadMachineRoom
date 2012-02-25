@@ -86,7 +86,9 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class PartOfSpeechTag  extends EvalFunc<Tuple>  {
 	
 	public final Logger logger = Logger.getLogger(getClass().getName());
-	private String modelPath = "jar:left3words-wsj-0-18.tagger";
+									
+    private String modelPath = "edu/stanford/nlp/model/english-left3words-distsim.tagger";	
+	
 	private String HTMLTagsToInclude  = "";
 	private static MaxentTagger tagger = null;
 	private HashMap<String,String> partsOfSpeechToOutput = null;

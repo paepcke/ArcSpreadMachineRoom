@@ -44,8 +44,8 @@
       <version>1.6.1</version>
     </dependency>    
     <dependency>
-      <groupId>stanford-postagger</groupId>
-      <artifactId>tagger</artifactId>
+      <groupId>stanford-postagger-with-model</groupId>
+      <artifactId>stanford-postagger-with-model</artifactId>
       <version>2012-01-06</version>
     </dependency>
     <dependency>
