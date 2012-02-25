@@ -1,0 +1,4 @@
+To perform clustering, first run the cluster prep script in PigIR.
+That will create a To_Cluster directory in a directory you specify with text files to be clustered.
+Pass this directory (the directory in which To_Cluster resides) to the cluster script along with a number of topics.
+NOTE the HADOOP_HOME environment variable must be set in order for this script to run correctly.
