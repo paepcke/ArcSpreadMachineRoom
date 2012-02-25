@@ -1,4 +1,4 @@
-package edu.stanford.pigir.pigudf.unittests;
+package edu.stanford.pigir.pigudf;
 
 import static junit.framework.Assert.assertEquals;
 
