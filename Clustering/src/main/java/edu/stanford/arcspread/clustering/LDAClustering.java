@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.io.Closeables;
 
 import edu.stanford.arcspread.clustering.printResults.PrintDocTopics;
+import edu.stanford.arcspread.clustering.printResults.PrintTopics;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -220,7 +221,7 @@ public final class LDAClustering extends AbstractJob {
     Path lastKnownState = getLastKnownStatePath(conf, output);
     Path stateIn;
     if (lastKnownState == null) {
-      stateIn = new Path(output, "state-0");
+      stateIn = new Path(output, "Topics/state-0");
       writeInitialState(stateIn, numTopics, numWords);
     } else {
       stateIn = lastKnownState;
@@ -236,7 +237,7 @@ public final class LDAClustering extends AbstractJob {
       log.info("LDA Iteration {}", iteration);
       conf.set(STATE_IN_KEY, stateIn.toString());
       // point the output to a new directory per iteration
-      Path stateOut = new Path(output, "state-" + iteration);
+      Path stateOut = new Path(output, "Topics/state-" + iteration);
       double ll = runSequential
           ? runIterationSequential(conf, input, stateOut)
           : runIteration(conf, input, stateIn, stateOut);
@@ -251,7 +252,7 @@ public final class LDAClustering extends AbstractJob {
       stateIn = stateOut;
       oldLL = ll;
       
-      Path docTopicOutput = new Path(output, "docTopics_" + iteration);
+      Path docTopicOutput = new Path(output, "DocTopics/docTopics_" + iteration);
 	  if(runSequential) {
 	      computeDocumentTopicProbabilitiesSequential(conf, input, new Path(output, "docTopics"));
 	  } else {
@@ -264,8 +265,11 @@ public final class LDAClustering extends AbstractJob {
 	                                        topicSmoothing);
 	  }
 	  
-	  Path csvOutput = new Path(output, "csvResults_" + iteration);
-	  PrintDocTopics.print(conf, docTopicOutput.toString() + "/part-m-00000", csvOutput.toString());
+	  Path csvDocTopicOutput	= new Path(output, "CSVResults/docTopics_" + iteration + ".csv");
+	  Path csvTopicOutput		= new Path(output, "CSVResults/topics_" + iteration + ".csv");
+	  Path dictFile				= new Path(output, "../vectors/dictionary.file-0");
+	  PrintDocTopics.print(conf, docTopicOutput.toString() + "/part-m-00000", csvDocTopicOutput.toString());
+	  PrintTopics.print(conf, stateOut.toString(), dictFile.toString(), csvTopicOutput.toString());
     }
     return -oldLL;
   }
