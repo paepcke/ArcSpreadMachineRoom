@@ -1,6 +1,8 @@
 package edu.stanford.pigir.warc;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
@@ -8,6 +10,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PositionedReadable;
+import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -23,7 +27,7 @@ import edu.stanford.pigir.pigudf.LineAndChunkReader;
  */
 public class WarcRecordReader extends RecordReader<LongWritable, Text> {
 	
-  private static final boolean DO_READ_CONTENT = true;
+  public static final boolean DO_READ_CONTENT = true;
   private static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
   private final Logger logger = Logger.getLogger(WarcLoader.class.getName());
   private long start;
@@ -34,22 +38,62 @@ public class WarcRecordReader extends RecordReader<LongWritable, Text> {
   private LongWritable keyWarcStreamPos = null;
   private WarcRecord valueWarcRecord = null;
   private FSDataInputStream fileIn = null;
+  private FileInputStream localFileIn = null;
 
+  
+public void initialize(File warcFile) throws IOException {
+	org.apache.hadoop.fs.Path warcFilePath = new org.apache.hadoop.fs.Path(warcFile.getAbsolutePath());
+	long fileStart  = 0L;
+	long fileLength = warcFile.getTotalSpace(); // ????
+	String[] hosts  = new String[1];
+	FileSplit inputSplit = new FileSplit(warcFilePath, 
+			fileStart,
+			fileLength,
+			hosts);
+	initialize(inputSplit, null);
+}
     
-  public void initialize(InputSplit genericSplit,
+/* (non-Javadoc)
+ * @see org.apache.hadoop.mapreduce.RecordReader#initialize(org.apache.hadoop.mapreduce.InputSplit, org.apache.hadoop.mapreduce.TaskAttemptContext)
+ * If using WARC reader outside of a Hadoop framework, use initialize(File), not
+ * this method. initialize(File) will pass null for the context, which we handle
+ * in this method.
+ */
+public void initialize(InputSplit genericSplit,
                          TaskAttemptContext context) throws IOException {
     FileSplit split = (FileSplit) genericSplit;
-    Configuration job = context.getConfiguration();
-
+    Configuration job = null;
+    if (context != null)
+    	job = context.getConfiguration();
+    else {
+    	// Using WARC reader outside of a Hadoop context: 
+    	job = new Configuration();
+    	job.set("io.file.buffer.size", "4096");
+    }
     start = split.getStart();
     end = start + split.getLength();
     final Path file = split.getPath();
-    FileSystem fs = file.getFileSystem(job);
-    fileIn = fs.open(split.getPath());
+    FileSystem fs = null;
+    
+    if (context != null) {
+    	fs = file.getFileSystem(job);
+    	fileIn = fs.open(split.getPath());
+    }
+    else {
+    	// Using WARC reader outside of a Hadoop context:
+    	String absoluteFileName = split.getPath().toString();
+    	localFileIn = new FileInputStream(absoluteFileName);
+    }
 
+    GZIPInputStream gzWarcInStream = null;
     try {
-    	GZIPInputStream gzWarcInStream = new GZIPInputStream(fileIn,
-    													   job.getInt("io.file.buffer.size", DEFAULT_BUFFER_SIZE));
+    	if (context != null)
+    		gzWarcInStream = new GZIPInputStream(fileIn,
+    											 job.getInt("io.file.buffer.size", DEFAULT_BUFFER_SIZE));
+    	else
+    		// Using WARC reader outside of a Hadoop context: 
+    		gzWarcInStream = new GZIPInputStream(localFileIn);
+    	
     	warcInStream = new DataInputStream(gzWarcInStream);
     } catch (IOException e) {
     	// Not a gzipped file?
@@ -137,5 +181,52 @@ public class WarcRecordReader extends RecordReader<LongWritable, Text> {
       warcLineReader.close(); 
     }
   }
+  
+	// ---------------------------------------- Inner Class WarcFileInputStream ----------------------------
+	
+	//class WarcFileInputStream extends FSDataInputStream implements PositionedReadable, Seekable {
+  	class WarcFileInputStream extends FileInputStream implements PositionedReadable, Seekable {
+		
+		FileInputStream warcFileStream = null;
+
+		public WarcFileInputStream(String warcFilePathStr) throws IOException {
+			this(new File(warcFilePathStr));
+		}
+		
+		public WarcFileInputStream(File warcFileObj) throws IOException {
+			super(warcFileObj);
+			warcFileStream = new FileInputStream(warcFileObj); 
+		}
+
+		public int read(long position, byte[] buffer, int offset, int length)
+				throws IOException {
+			warcFileStream.skip(position);
+			mark(length + 1);
+			int bytesRead = warcFileStream.read(buffer, offset, length);
+			warcFileStream.reset();
+			return bytesRead;
+		}
+
+		public void readFully(long position, byte[] buffer) throws IOException {
+			read(position, buffer, 0, buffer.length);
+		}
+
+		public void readFully(long position, byte[] buffer, int offset, int length)
+				throws IOException {
+			read(position, buffer, offset, length);
+		}
+
+		public long getPos() throws IOException {
+			throw new IOException("Method getPos() not implemented for local Warc file reading.");
+		}
+
+		public void seek(long numBytes) throws IOException {
+			throw new IOException("Method seek() not implemented for local Warc file reading.");
+		}
+
+		public boolean seekToNewSource(long arg0) throws IOException {
+			return false;
+		}
+	}
 }
 

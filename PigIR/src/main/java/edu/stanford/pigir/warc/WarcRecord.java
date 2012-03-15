@@ -154,8 +154,8 @@ public class WarcRecord extends Text implements WarcRecordMap {
 	};
 	
 	// Marker to look for when finding the next WARC record wbRecordReader a stream:
-	public static String WARC_VERSION = "WARC/0.18";
-	public static String WARC_VERSION_LINE = "WARC/0.18\n";
+	public static String[] WARC_VERSIONS = new String[] {"WARC/0.18","WARC/1.0"};
+	//public static String WARC_VERSION_LINE = "WARC/0.18\n";
 	private static String NEWLINE="\n";
 	
 	private static HashMap<String,String> tmpHeaderMap = new HashMap<String, String>();
@@ -327,8 +327,11 @@ public class WarcRecord extends Text implements WarcRecordMap {
 		while ((!foundMark) && ((bytesRead = warcLineReader.readLine(txtBuf))!=0)) {
 			line = txtBuf.toString();
 			tmpGrandTotalBytesRead += bytesRead;
-			if (line.startsWith(WARC_VERSION)) {
-				foundMark=true;
+			
+			for (String acceptableWarcVersion : WARC_VERSIONS) {
+				if (line.startsWith(acceptableWarcVersion)) {
+					foundMark=true;
+				}
 			}
 			txtBuf.clear();
 		}
