@@ -30,6 +30,8 @@
 REGISTER $USER_CONTRIB/PigIR.jar;
 REGISTER $USER_CONTRIB/jsoup-1.5.2.jar
 
+define titleText edu.stanford.pigir.pigudf.ExtractSingleHTMLTag('title');
+
 docs = LOAD '$CRAWL_SOURCE'
 	USING edu.stanford.pigir.webbase.WebBaseLoader()
 	AS (url:chararray,
@@ -41,7 +43,7 @@ docs = LOAD '$CRAWL_SOURCE'
 	 	content:chararray);
 
 --extract html title and store each into its own text file
-titles = FOREACH docs GENERATE CONCAT(CONCAT('$CRAWL_NAME', '_'), docIDInCrawl), edu.stanford.pigir.pigudf.HTMLTitle(content); 
+titles = FOREACH docs GENERATE CONCAT(CONCAT('$CRAWL_NAME', '_'), docIDInCrawl), edu.stanford.pigir.pigudf.FilterClusteringStopwords(titleText(content));
 STORE titles INTO '$CLUSTER_PREP_DEST/To_Cluster/$CRAWL_NAME' USING edu.stanford.pigir.pigudf.TupleMultiStorage('$CLUSTER_PREP_DEST/To_Cluster/$CRAWL_NAME', '0', '1');
 
 

@@ -6,11 +6,11 @@ MAHOUT_HOME=~/Hadoop/mahout/trunk
 MAHOUT=${MAHOUT_HOME}/bin/mahout
 HADOOP=${HADOOP_HOME}/bin/hadoop
 
-USAGE="Usage: Cluster
+USAGE="Usage: Re-Cluster
                          \t\t\t [{-h | --help}] \n
                          \t\t\t [{-c | --clusterHome} <clusterHome>] (default is user home dir) \n
                          \t\t\t [{-n | --numTopics} <numberOfTopics>] (default is 5) \n
-    \tExample: Cluster -c /data/Clustering -n 7	 \n"
+    \tExample: Re-Cluster -c /data/Clustering -n 7 \n"
 
 #variables passed in by arguments
 CLUSTER_HOME=/user/`basename $HOME`
@@ -52,16 +52,8 @@ while true; do
    shift
 done
 
-#Create a sequence file from a directory of text files
-"$MAHOUT" seqdirectory --input ${CLUSTER_HOME}/To_Cluster \
-                       --output ${CLUSTER_HOME}/seqfiles
-                            
-#Create vectors from the sequence file created above
-"$MAHOUT" seq2sparse   --input         ${CLUSTER_HOME}/seqfiles     \
-                       --output        ${CLUSTER_HOME}/vectors      \
-                       --sequentialAccessVector                     \
-                       --namedVector                                \
-                       --maxDFPercent   75                                      
+#Remove old results
+"$HADOOP" fs -rmr ${CLUSTER_HOME}/lda-results                                     
                             
 #Perform LDA Clustering
 "$HADOOP" jar ./target/Clustering-1.0-SNAPSHOT.jar  \
