@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import edu.stanford.pigir.warc.WarcRecord;
 import edu.stanford.pigir.warc.WarcStreamIterator;
 import edu.stanford.pigir.webbase.WbTextRecord;
 
