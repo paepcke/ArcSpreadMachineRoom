@@ -27,12 +27,12 @@ public class ExtractSingleHTMLTag extends EvalFunc<String>
 	// the question mark, the .* would eat all the html.
 	// We look for a not-escaped opening angle
 	// bracket, followed by the tag name, etc.:
-	public static final String H1_PATTERN		= "[^\\\\]<h1(.*?)>(.*?)</h1>";
-	public static final String H2_PATTERN		= "[^\\\\]<h2(.*?)>(.*?)</h2>";
-	public static final String H3_PATTERN		= "[^\\\\]<h3(.*?)>(.*?)</h3>";
-	public static final String H4_PATTERN		= "[^\\\\]<h4(.*?)>(.*?)</h4>";
-	public static final String H5_PATTERN		= "[^\\\\]<h5(.*?)>(.*?)</h5>";
-	public static final String H6_PATTERN		= "[^\\\\]<h6(.*?)>(.*?)</h6>";
+	public static final String H1_PATTERN		= "<h1(.*?)>(.*?)</h1>";
+	public static final String H2_PATTERN		= "<h2(.*?)>(.*?)</h2>";
+	public static final String H3_PATTERN		= "<h3(.*?)>(.*?)</h3>";
+	public static final String H4_PATTERN		= "<h4(.*?)>(.*?)</h4>";
+	public static final String H5_PATTERN		= "<h5(.*?)>(.*?)</h5>";
+	public static final String H6_PATTERN		= "<h6(.*?)>(.*?)</h6>";
 	public static final String TITLE_PATTERN	= "<title(.*?)>(.*?)</title>";
 	
 	//min html lengths
@@ -40,10 +40,16 @@ public class ExtractSingleHTMLTag extends EvalFunc<String>
 	public static final int TITLE_MIN_HTML_LENGTH	= "<title></title>".length();
 	
 	//private local variables used to extract tag
-	private static String tagPattern;
-	private static int minHtmlLength;
+	private String tagPattern;
+	private String separator;
+	private int minHtmlLength;
 	
 	public ExtractSingleHTMLTag(String tagType) throws IOException
+	{
+		this(tagType, " ");
+	}
+	
+	public ExtractSingleHTMLTag(String tagType, String separator) throws IOException
 	{
 		//determine tag type
 		if(tagType.equalsIgnoreCase(TITLE))
@@ -83,6 +89,8 @@ public class ExtractSingleHTMLTag extends EvalFunc<String>
 		}
 		else
 			throw new IOException("invalid or unimplemented tag type");
+		
+		this.separator = separator;
 	}
 	
 	@Override
@@ -104,14 +112,14 @@ public class ExtractSingleHTMLTag extends EvalFunc<String>
 			throw new IOException("ExtractSingleHTMLTag(): bad input: " + input);
 		}
 		
-		return extractTag(html);
+		return extractTag(html, this.separator);
 	}
 	
 	public String extractTag(String html) throws IOException
 	{
-		return extractTag(html, " ");
+		return extractTag(html, this.separator);
 	}	
-	public String extractTag(String html, String separator) throws IOException
+	private String extractTag(String html, String separator) throws IOException
 	{
 		String output = "";				
 		Pattern titleTextPattern = Pattern.compile(tagPattern, Pattern.CASE_INSENSITIVE);
