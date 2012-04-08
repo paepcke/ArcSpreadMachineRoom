@@ -1,7 +1,54 @@
 To perform clustering, first run the cluster prep script in PigIR.
-That will create a To_Cluster directory in a directory you specify with text 
-files to be clustered.  Pass this directory (the directory in which To_Cluster 
-resides) to the cluster script along with a number of topics.  If you want to 
-re-cluster the same set of pages, but with a different number of topics, run 
-the Re-Cluster script.
-NOTE the HADOOP_HOME environment variable must be set in order for this script to run correctly.
+That will create a To_Cluster directory in a directory you specify
+with text files to be clustered.  Pass this directory (the directory
+in which To_Cluster resides) to the cluster script along with a number
+of topics.  If you want to re-cluster the same set of pages, but with
+a different number of topics, run the Re-Cluster script.
+
+NOTE the HADOOP_HOME environment variable must be set in order for
+this script to run correctly.
+
+
+ArcSpread Document Clustering
+
+The ArcSpread spreadsheet layer provides an “ntopics” function that
+classifies a collection of web pages into a specified number of
+topics.  A classic example of this is clustering article pages on a
+news site into politics, sports, business, etc.  However, when applied
+to different sets of pages, more interesting topics can arise.  For
+example, much of the sports news during Hurricane Katrina was the
+effect of the hurricane on Louisiana football teams (LSU and New
+Orleans Saints).  Pages are classified into topics in a two step
+process.  The first is a preprocessing step where a Pig script
+extracts important text from each page.  This text is then clustered
+using Latent Dirichlet Allocation (LDA) [insert citation].  Results
+are provided to the spreadsheet layer as CSV files that contain
+important words for each topic as well as the pages that belong to
+each topic.
+
+In the preprocessing step, we take web pages as input either via
+WebBase or a WARC file.  To extract important text from these pages,
+we use a generic HTML tag extractor PigUDF to grab text from <title>,
+<h1>, or any other tags that may signify important text.  One could
+imagine using the summarization described in [insert section] instead;
+however, this would be too computationally expensive as a
+preprocessing step, especially when dealing with massive amounts of
+data.  Once important text is extracted, another UDF is used to filter
+out stopwords and stopphrases.  For example, article pages on
+news.yahoo.com have titles that end with the phrase “Yahoo! News.”
+These phrases must be filtered out so we cluster pages based on their
+content rather than their origin site.  The resulting text from each
+page is then stored into its own file under a “To_Cluster” directory.
+The file names uniquely identify the original web page.
+
+Once all files have been stored, they are clustered using LDA
+implemented in Mahout [insert citation] on Hadoop's map-reduce
+framework.  We modified the implementation to provide more complete
+incremental results in CSV files that can be ingested more quickly and
+easily by the spreadsheet layer.  LDA uses a three-tiered hierarchical
+Bayesian model in which each document is a mixture over an underlying
+set of topics.  Each topic is in turn an infinite mixture over the set
+of words from the documents.  An expectation maximization (EM)
+algorithm is used to estimate the parameters of this Bayesian model.
+We provide complete results to the spreadsheet after each iteration of
+the algorithm to improve performance for the end user.
