@@ -170,7 +170,7 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 		// Ask the distributor demon for a distributor:		
 		String distribDemonRequest = "new,0," + 
 									 (startSite == null ? "," : startSite) + 
-									 (endSite   == null ? "," : endSite) + 
+									 (endSite   == null ? "," : "," + endSite) + 
 									 "," + 
 									 System.getProperty("user.name") + "," +
 									 Constants.APPLICATION_ID +

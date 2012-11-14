@@ -25,7 +25,12 @@ class WebBasePagePulling {
 		// Obtain a 'distributor contact' object that will contain
 		// all the information needed to access this particular crawl.
 		// You include the total number of pages you want:
-		DistributorContact wbContact = DistributorContact.getCrawlDistributorContact(crawlName, 2);
+		//****DistributorContact wbContact = DistributorContact.getCrawlDistributorContact(crawlName, 2);
+		DistributorContact wbContact = DistributorContact.getCrawlDistributorContact(
+				crawlName, 
+				100, 
+				"www.usatoday.com",
+				"www.usatoday.com");
 		
 		// Obtain an Iterator that will feed out one page at a time.
 		// The startup might take a few moments. Complete failure can happen
@@ -42,7 +47,8 @@ class WebBasePagePulling {
 	}
 
 	public static void main(String[] argv) throws IOException {
-		new WebBasePagePulling().trial("09-2004");
+		//*****new WebBasePagePulling().trial("09-2004");
+		new WebBasePagePulling().trial("uspapers-01-2010");
 		System.out.println("Done");
 	}
 }
