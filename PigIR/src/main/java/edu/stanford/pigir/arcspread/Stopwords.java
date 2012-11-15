@@ -26,8 +26,8 @@ public class Stopwords extends IsStopword {
 
 	/**
 	 * Test whether a given word is a stopword.
-	 * @param word: the word to test.
-	 * @return: true if word is a stopword, else false;
+	 * @param word the word to test.
+	 * @return true if word is a stopword, else false;
 	 */
 	public static Boolean isStopword(String word) {
 		return IsStopword.isStopword(word);
@@ -35,7 +35,7 @@ public class Stopwords extends IsStopword {
 	
 	/**
 	 * Obtains the currently used list of stopwords.
-	 * @return: a set containing all stopwords currently in use
+	 * @return a set containing all stopwords currently in use
 	 * by method <code>isStopword()</code>. 
 	 */
 	public static Set<String> getStopwords() {
@@ -49,7 +49,7 @@ public class Stopwords extends IsStopword {
 	
 	/**
 	 * Replace the set of stopwords.
-	 * @param newStopwordSet: a Set of the new stopwords.
+	 * @param newStopwordSet a Set of the new stopwords.
 	 */
 	public static void setStopwords(Set<String> newStopwordSet) {
 		HashMap<String, Boolean> newStopwordMap = new HashMap<String,Boolean>();
@@ -65,7 +65,7 @@ public class Stopwords extends IsStopword {
 	
 	/**
 	 * Add a new word to the stopword list.
-	 * @param word: word to be added.
+	 * @param word word to be added.
 	 */
 	public static void addStopword(String word) {
 		IsStopword.stopwords.put(word, true);
@@ -77,7 +77,7 @@ public class Stopwords extends IsStopword {
 	
 	/**
 	 * Causes the given word to no longer be a stopword.
-	 * @param word: word to be deleted from the stopword list.
+	 * @param word word to be deleted from the stopword list.
 	 */
 	public static void removeStopword(String word) {
 		IsStopword.stopwords.remove(word);
@@ -88,7 +88,7 @@ public class Stopwords extends IsStopword {
 	/**
 	 * This class is intended for use by application.
 	 * But here is an example:
-	 * @param argv: no command line args expected.
+	 * @param argv no command line args expected.
 	 */
 	public static void main(String[] argv) {
 		System.out.println(Stopwords.getStopwords().toString());

@@ -67,7 +67,7 @@ public class DistributorContact implements Writable, Serializable {
 	 * BufferedWebStreamIterator objects. 
 	 * @param crawlName is the name of the crawl as obtained from the Wibbi Web page.
 	 * @param numPagesWanted the number of pages to be retrieved.
-	 * @return
+	 * @return distributor contact object.
 	 * @throws IOException
 	 */
 	public static DistributorContact getCrawlDistributorContact(String crawlName, int numPagesWanted) throws IOException {

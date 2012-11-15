@@ -25,7 +25,7 @@ public class LineAndChunkReader {
    * methods are copies of org/apache/hadoop/util/LineReader.java. Unfortunately,
    * that class keeps variable bufferPosn private. So the chunk reading could
    * not be added via inheritance, which would have been much, much better.
-   * @param wbRecordReader The input stream
+   * @param in The input stream
    * @throws IOException
    */
   public LineAndChunkReader(InputStream in) {
@@ -35,7 +35,7 @@ public class LineAndChunkReader {
   /**
    * Create a line reader that reads from the given stream using the 
    * given buffer-size.
-   * @param wbRecordReader The input stream
+   * @param in The input stream
    * @param bufferSize Size of the read buffer
    * @throws IOException
    */
@@ -49,7 +49,7 @@ public class LineAndChunkReader {
    * Create a line reader that reads from the given stream using the
    * <code>io.file.buffer.size</code> specified wbRecordReader the given
    * <code>Configuration</code>.
-   * @param wbRecordReader input stream
+   * @param in input stream
    * @param conf configuration
    * @throws IOException
    */

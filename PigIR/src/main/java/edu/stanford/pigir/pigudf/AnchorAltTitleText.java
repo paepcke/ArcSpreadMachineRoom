@@ -23,7 +23,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
  * be extracted: the body of the ALT attribute to the image
  * element, and the body of the TITLE attribute to other
  * HTML elements. The latter is not to be confused with the
- * HTML page title. {@link http://www.w3schools.com/tags/att_standard_title.asp}.
+ * HTML page title. @see <a href=http://www.w3schools.com/tags/att_standard_title.asp>W3Schools standard title</a>}.
  * 
  * NOTE: does not properly handle embedded escaped double quotes.
  *         <... ALT="foo \"bar\" baz"...>
@@ -88,9 +88,6 @@ public class AnchorAltTitleText extends EvalFunc<Tuple> {
      * Main method for extracting anchor text, alt text, and title 
      * attribute text.
      * @param input Single-field tuple with an HTML string
-     * @param getAnchorText Boolean with value AnchorText.GET_ANCHOR_TEXT, or AnchorText.NO_ANCHOR_TEXT.
-     * @param getAltText Boolean with value AnchorText.GET_ALT_TEXT, or AnchorText.NO_ALT_TEXT.
-     * @param getTitleAttributeText getAltText Boolean with value AnchorText.GET_TITLE_TEXT, or AnchorText.NO_TITLE_TEXT.
      * @return Tuple of strings with all extracted text fragments. 
      * @throws IOException
      */

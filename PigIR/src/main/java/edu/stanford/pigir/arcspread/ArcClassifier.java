@@ -49,8 +49,8 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * constructor the path specification is a Maven resource path. You place
 	 * the property file into <projectRoot>/src/main/resources. A file myProps.prop
 	 * would be specified as "myProps.prop" in this constructor.
-	 * @See <url>http://www-nlp.stanford.edu/wiki/Software/Classifier</url>
-	 * @param propertiesFileResourcePath: Maven resource path for the property file.
+	 * @see <url>http://www-nlp.stanford.edu/wiki/Software/Classifier</url>
+	 * @param propertiesFileResourcePath Maven resource path for the property file.
 	 * 		  This path is relative to <projectRoot>/target/classes. That is where
 	 * 		  the compilation process copies files from <projectRoot>/src/main/resources.
 	 */
@@ -60,8 +60,8 @@ public class ArcClassifier extends ColumnDataClassifier {
 	
 	/**
 	 * Constructor taking an absolute path to the property file. For property file information,
-	 * @See <url>http://www-nlp.stanford.edu/wiki/Software/Classifier</url>.
-	 * @param propertiesFile: File object containing the full path to the property file.
+	 * @see <a href="http://www-nlp.stanford.edu/wiki/Software/Classifier">http://www-nlp.stanford.edu/wiki/Software/Classifier</a>
+	 * @param propertiesFile File object containing the full path to the property file.
 	 */
 	public ArcClassifier(File propertiesFile) {
 		super(propertiesFile.getAbsolutePath());
@@ -70,8 +70,8 @@ public class ArcClassifier extends ColumnDataClassifier {
 	/**
 	 * Turn a normal text file into a string of tokens without tabs. This format is 
 	 * required for inputs to the trained classifier.
-	 * @param inFilePath: absolute path to the text file.
-	 * @param outFilePath: absolute path to the new file's destination.
+	 * @param inFilePath absolute path to the text file.
+	 * @param outFilePath absolute path to the new file's destination.
 	 * @throws IOException
 	 */
 	public static void textFilePrep(String inFilePath, String outFilePath) throws IOException {
@@ -100,7 +100,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * see the example cheese2007.train in this project's resources directory. The path 
 	 * for this method's parameter is a Maven resource path. See header comment to one of
 	 * the initializers for details.
-	 * @param trainingSetResourcePath: resource path to the training file. Example: "myFile.train" 
+	 * @param trainingSetResourcePath resource path to the training file. Example: "myFile.train" 
 	 * 			for files in your project's <projectRoot>/src/main/resources directory. 
 	 * @throws IOException
 	 */
@@ -113,7 +113,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * Train the classifier using a training file. For details on the training file format
 	 * see the example cheese2007.train in this project's resources directory. The parameter 
 	 * for this method is an absolute path.
-	 * @param trainingSetFile: trainingSetResourcePath: resource path to the training file. Example: "myFile.train" 
+	 * @param trainingSetFile trainingSetResourcePath resource path to the training file. Example: "myFile.train" 
 	 * 			for files in your project's <projectRoot>/src/main/resources directory.
 	 * @throws IOException
 	 */
@@ -127,7 +127,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * see the example cheese2007.test in this project's resources directory. The path 
 	 * for this method's parameter is a Maven resource path. See header comment to one of
 	 * the initializers for details.
- 	 * @param testFileResourcePath: resource path to the test file. Example: "myFile.test" 
+ 	 * @param testFileResourcePath resource path to the test file. Example: "myFile.test" 
 	 * 			for files in your project's <projectRoot>/src/main/resources directory.
 	 */
 	public  void test(String testFileResourcePath) {
@@ -139,7 +139,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * Optionally test the classifier using a testing file. For details on the testing file format
 	 * see the example cheese2007.test in this project's resources directory. The path 
 	 * for this method's parameter is absolute.
-	 * @param testFile: absolute path to the test file. 
+	 * @param testFile absolute path to the test file. 
 	 */
 	public  void test(File testFile) {
 		if (trainedClassifier == null) {
@@ -156,7 +156,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	/**
 	 * Optionally save the trained classifier to a file for later retrieval via
 	 * method loadClassifier().
-	 * @param targetPath: absolute path to destination.
+	 * @param targetPath absolute path to destination.
 	 * @throws IOException
 	 */
 	public void saveClassifier(String targetPath) throws IOException {
@@ -173,7 +173,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * trained, and then saved via method saveClassifier(). The path 
 	 * for this method's parameter is a Maven resource path. See header comment to one of
 	 * the initializers for details.
-	 * @param resourcePath: resource path to the saved classifier. Example: "myFile.classifier" 
+	 * @param resourcePath resource path to the saved classifier. Example: "myFile.classifier" 
 	 * 			for files in your project's <projectRoot>/src/main/resources directory.
 	 * @throws IOException
 	 */
@@ -186,7 +186,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * In a new instance of this class: restore a classifier that was previously
 	 * trained, and then saved via method saveClassifier(). The path 
 	 * for this method's parameter is absolute. 
-	 * @param sourceFile: File object with the absolute path to the saved classifier file.
+	 * @param sourceFile File object with the absolute path to the saved classifier file.
 	 * @throws IOException
 	 */
 	public void loadClassifier(File sourceFile) throws IOException {
@@ -207,7 +207,7 @@ public class ArcClassifier extends ColumnDataClassifier {
 	 * file name. In Maven the resourcePath is relative to resource root. 
 	 * That is <projectRoot>/target/classes, where resources are copied 
 	 * from src/main/resources during compilation.
-	 * @param resourcePath: Path relative to the resource root. Like /myResource.txt
+	 * @param resourcePath Path relative to the resource root. Like /myResource.txt
 	 * @return the absolute path to the file on this machine, or null if not found. 
 	 */
 	public static String getFilePath(String resourcePath) {

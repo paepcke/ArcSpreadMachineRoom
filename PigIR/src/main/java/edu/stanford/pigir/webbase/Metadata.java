@@ -114,7 +114,7 @@ public class Metadata implements Map<String,Object> {
 	 * Given the key of the Map view, return a String
 	 * form of the respective value.
 	 * @param key
-	 * @return
+	 * @return string form of WebBase record field value.
 	 */
 	public String fieldToString(String key) {
 		if (key.equals(WbRecord.WEBBASE_URL)) return url;

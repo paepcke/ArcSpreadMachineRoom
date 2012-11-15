@@ -177,14 +177,14 @@ public final class Common {
 	}
 	
 	/**
-	 * @see getSocket(String machineName, int port, int numAttempts, String infoOnError)
+	 * @see #getSocket(String machineName, int port, int numAttempts, String infoOnError)
 	 * @param iPAddr IP address object of target machine.
 	 * @param port port Port to connect to at target machine
 	 * @param numAttempts numAttempts Number of times a connection attempt is to be made
 	 * @param infoOnError infoOnError String to use in error messages. Messages generated with this method
 	 * will automatically add the machine name and port in parentheses. So this information is not
 	 * required in this parameter.
-	 * @return
+	 * @return open socket to machine and port
 	 * @throws IOException
 	 */
 	public static Socket getSocket(InetAddress iPAddr, int port, int numAttempts, String infoOnError) throws IOException {
@@ -195,7 +195,7 @@ public final class Common {
 	 * @param machineName
 	 * @param port
 	 * @param infoOnError
-	 * @return
+	 * @return open socket to machine and port
 	 * @throws IOException
 	 */
 	public static Socket getSocket(String machineName, int port, String infoOnError) throws IOException {
@@ -205,7 +205,7 @@ public final class Common {
 	 * @param iPAddr
 	 * @param port
 	 * @param infoOnError
-	 * @return
+	 * @return open socket to machine and port
 	 * @throws IOException
 	 */
 	public static Socket getSocket(InetAddress iPAddr, int port, String infoOnError) throws IOException {
@@ -215,7 +215,7 @@ public final class Common {
 	/**
 	 * @param machineName
 	 * @param port
-	 * @return
+	 * @return open socket to machine and port
 	 * @throws IOException
 	 */
 	public static Socket getSocket(String machineName, int port) throws IOException {
@@ -224,7 +224,7 @@ public final class Common {
 	/**
 	 * @param iPAddr
 	 * @param port
-	 * @return
+	 * @return open socket to machine and port
 	 * @throws IOException
 	 */
 	public static Socket getSocket(InetAddress iPAddr, int port) throws IOException {
@@ -239,7 +239,7 @@ public final class Common {
 	/**
 	 * Given an ASCII format IP address string, return an InetAddress object.
 	 * @param ip
-	 * @return
+	 * @return inetAddress object
 	 * @throws UnknownHostException
 	 */
 	public static InetAddress getInetAddressFromAsciiIP(String ip) throws UnknownHostException {

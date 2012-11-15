@@ -45,9 +45,9 @@ abstract public class WarcStream {
 	/**
 	 * Given a WARC record instance, return an equivalent WbTextRecord
 	 * instance.
-	 * @param docID: Document ID to be passed into the resulting WbTextRecord.
-	 * @param warcRecord: The WARC record instance to be converted.
-	 * @return: A WbTextRecord that is usable in a WebStream.
+	 * @param docID Document ID to be passed into the resulting WbTextRecord.
+	 * @param warcRecord The WARC record instance to be converted.
+	 * @return A WbTextRecord that is usable in a WebStream.
 	 */
 	protected WbTextRecord makeWbRecord(int docID, WarcRecord warcRecord) {
 		//String uuidStr = warcRecord.get(WarcRecord.WARC_RECORD_ID);

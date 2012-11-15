@@ -7,9 +7,11 @@ import edu.stanford.pigir.webbase.WbRecord;
 import edu.stanford.pigir.webbase.wbpull.webStream.BufferedWebStreamIterator;
 
 /**
- * Example of an application that pulls Web pages from
- * WebBase.
  * @author paepcke
+ * Example of an application that pulls Web pages from
+ * WebBase. If running outside of Eclipse, you can run 
+ * the following command line arg in the PigIR root dir:
+ *  mvn exec:java -Dexec.mainClass="edu.stanford.pigir.arcspread.WebBasePagePulling"
  */
 class WebBasePagePulling {
 	/**
@@ -18,7 +20,7 @@ class WebBasePagePulling {
 	 * http://wb6.stanford.edu/~testbed/cgi-bin/crawlStreamingCrawlChoice.pl?numPages=1
 	 * though this URL will change. Till then, don't push the buttons on 
 	 * that page. 
-	 * @param crawlName: name of the crawl as obtained from the WebWase crawl directory.
+	 * @param crawlName name of the crawl as obtained from the WebWase crawl directory.
 	 * @throws IOException
 	 */
 	public void trial(String crawlName) throws IOException {

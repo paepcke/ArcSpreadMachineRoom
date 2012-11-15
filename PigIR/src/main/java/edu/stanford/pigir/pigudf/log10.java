@@ -11,16 +11,21 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
+ 
 
+/**
+ * Provides Pig script access to Java Math.log10() for Double, Long, and Integer arguments.
+ * @author paepcke
+ *
+ */
 public class log10 extends EvalFunc<Double> {
 	
 	/**
-	 * Provids Pig script access to Java Math.log10() for Double, Long, and Integer arguments.
+	 * Provides Pig script access to Java Math.log10() for Double, Long, and Integer arguments.
 	 * 
 	 * Input: tuple(arg)
 	 * Output: Double
 	 * 
-	 * @author paepcke
 	 *
 	 */
 	

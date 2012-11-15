@@ -149,13 +149,13 @@ public class PartOfSpeechTag  extends EvalFunc<Tuple>  {
 	}
 	
 	/**
-	 * @param theHTMLTags. If theHTMLTags is a string of tags, those are passed into the
+	 * @param theHTMLTags If theHTMLTags is a string of tags, those are passed into the
 	 * 		call to runTagger() of the POS tagger. 
-	 * @param outputStandardPOSTags. If outputStandardPOSTags is
+	 * @param outputStandardPOSTags If outputStandardPOSTags is
 	 * 		TRUE, then only words tagged with the parts of speech defined in
 	 * 		the HashMap standardPartsOfSpeechToOutput will be included in the
 	 * 		output.  
-	 * @param POSTagsToOutput. If this is a non-empty string, and outputStandardPOSTags
+	 * @param POSTagsToOutput If this is a non-empty string, and outputStandardPOSTags
 	 * 		is false, then the string is expected to be a space separated list
 	 * 		of parts of speech tags. Only words tagged with tags in this parameter will be
 	 * 		included in the output.

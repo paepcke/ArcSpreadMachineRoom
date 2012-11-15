@@ -98,7 +98,6 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	 * overrides the start site held in the distribContact.
 	 *  
 	 * @param distribContact object holding the WebBase retrieval information.
-	 * @param numPages is the number of pages to retrieve from the WebBase stream.
 	 * @param startSite names the first Web site to be retrieved. A value of
 	 * 		  null indicates the first site.
 	 * @throws IOException
@@ -121,7 +120,6 @@ public class BufferedWebStreamIterator extends WebStream implements Iterator<WbR
 	 * override the start and end sites held in the distribContact.
 	 *  
 	 * @param distribContact object holding the WebBase retrieval information.
-	 * @param numPages is the number of pages to retrieve from the WebBase stream.
 	 * @param startSite names the first Web site to be retrieved. A value of
 	 * 		  null indicates the first site.
 	 * @param endSite names the last Web site to be retrieved. A value of

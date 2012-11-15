@@ -12,7 +12,6 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
  * Returns the input tuple with the first element removed.  
  * 
  * @author Andreas Paepcke
- * @see rest()
  */
 public class Rest extends EvalFunc<Tuple> {
 	

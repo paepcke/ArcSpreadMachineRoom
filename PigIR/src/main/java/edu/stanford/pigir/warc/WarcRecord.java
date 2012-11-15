@@ -340,7 +340,8 @@ public class WarcRecord extends Text implements WarcRecordMap {
 
 	/**
 	 * Reads wbRecordReader a WARC record from a data input stream
-	 * @param Warc line reader for the stream.
+	 * @param warcInLineReader line reader for the stream.
+	 * @param readContent indicate whether the content of the record is needed, as opposed to just the WARC header info.
 	 * @return a WARC record (or null if eof)
 	 * @throws java.io.IOException
 	 */
@@ -381,7 +382,7 @@ public class WarcRecord extends Text implements WarcRecordMap {
 	}
 	/**
 	 * Retrieves the bytes content as a UTF-8 string
-	 * @return
+	 * @return ASCII (UTF-8) string of record content.
 	 */
 	public String getContentUTF8() {
 		String retString=null;

@@ -1,5 +1,11 @@
 *.class
-target/*
+target/classes
+target/*.jar
+target/javadoc-bundle-options
+target/maven-archiver
+target/surefire
+target/surefire-reports
+target/test-classes
 ../WebBaseAccess
 .settings/*
 .classpath

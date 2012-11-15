@@ -11,7 +11,6 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
  * Returns the first element of a tuple
  * 
  * @author Andreas Paepcke
- * @see rest()
  */
 public class First extends EvalFunc<Object> {
 	

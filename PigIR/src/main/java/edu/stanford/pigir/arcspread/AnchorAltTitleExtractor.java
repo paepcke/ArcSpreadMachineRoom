@@ -28,10 +28,10 @@ public class AnchorAltTitleExtractor {
 	 * and/or img tag 'ALT' attribute texts, and/or img tag 'title' 
 	 * attribute texts.
 	 * 
-	 * @param content: The HTML string to process
-	 * @param getAnchor: Whether or not link anchor text should be included in the result.
-	 * @param getAlt: Whether or not image Alt attribute text should be included in the result.
-	 * @param getImgTitle: Whether or not image Title attribute text should be included in the result.
+	 * @param content The HTML string to process
+	 * @param getAnchor Whether or not link anchor text should be included in the result.
+	 * @param getAlt Whether or not image Alt attribute text should be included in the result.
+	 * @param getImgTitle Whether or not image Title attribute text should be included in the result.
 	 * @return List of String with the requested information.
 	 */
 	public static List<Object> extract(String content, 
@@ -73,7 +73,7 @@ public class AnchorAltTitleExtractor {
 	/**
 	 * This class is intended to be used by applications.
 	 * Nonetheless, here is an example.
-	 * @param args: No command line arguments are expected.
+	 * @param args No command line arguments are expected.
 	 */
 	public static void main(String[] args) {
 		final boolean GET_ANCHOR_TEXT    = true;

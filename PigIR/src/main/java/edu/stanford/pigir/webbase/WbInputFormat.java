@@ -71,7 +71,7 @@ public class WbInputFormat extends InputFormat<WbInputSplit,Text> {
 	------------------------*/
 	/**
 	 * Gather necessary information, then compute split distribution.
-	 * @param jobwbJobProperties
+	 * @param wbJobProperties properties of the Hadoop/Pig job to run.
 	 * @throws IOException
 	 */
 	public WbInputFormat(MultiTypeProperties wbJobProperties) throws IOException {

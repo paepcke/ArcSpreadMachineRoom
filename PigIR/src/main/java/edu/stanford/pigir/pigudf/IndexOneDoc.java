@@ -31,9 +31,9 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
  * 			0 to turn feature off, or 1 to turn it on (default is 1) 
  * <li> Split regexp <optional>. If present, null to keep default, or a regular 
  * 			expression string acceptable to Java split(). For default, 
- * 			@see pigir.pigudf.RegexpTokenizer#defaultSepRegexp RegexpTokenizer.
+ * 			see pigir.pigudf.RegexpTokenize.getDefaultSepRegexp()
  * </ul>
-
+ *
  * <b>Output:</b><br>  
  *  	 Bag of tuples structured like this: {@code ("na",docID,postingsCount), (token1,docid,tokenPosition1), (token2,docid,tokenPosition2), ... }
  *  	 The docID is the same in all the result member tuples. The initial tuple with the docID is
@@ -42,7 +42,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
  * Usage scenario: indexing a Web site in a Map/Reduce context. 
  * This method is a mapper.
  * 
- * @see RegexpTokenize
+ * see edu.stanford.pigir.pigudf.RegexpTokenize
  * 
  * @author paepcke
  */

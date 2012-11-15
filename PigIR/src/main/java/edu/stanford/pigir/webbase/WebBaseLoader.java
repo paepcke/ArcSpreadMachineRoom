@@ -76,7 +76,7 @@ public class WebBaseLoader extends LoadFunc implements LoadPushDown {
      * Whatever we return will later be passed to setLocation(); 
      *  
      * @param location is the string the user passed to the Pig LOAD command.
-     * @param current directory as far as Hadoop is concerned. 
+     * @param curDir current directory as far as Hadoop is concerned. 
      */
     
     @Override

@@ -172,7 +172,7 @@ public abstract class WbRecord extends Text implements WbRecordMap<String, Objec
 	------------------------*/
 	/**
 	 * Retrieves the bytes content as a UTF-8 string
-	 * @return
+	 * @return convert content to UTF-8 (ASCII) format.
 	 */
 	public String getContentUTF8() {
 		String retString=null;

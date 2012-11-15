@@ -122,7 +122,7 @@ public class POSTagger implements Iterator<List<String>> {
 	
 	/**
 	 * Obtain a tagger instance for your content.
-	 * @param contentToTag: a String containing all of your content.
+	 * @param contentToTag a String containing all of your content.
 	 */
 	public POSTagger(String contentToTag) {
 		content = contentToTag;
@@ -137,7 +137,7 @@ public class POSTagger implements Iterator<List<String>> {
 	
 	/**
 	 * All text will be POS-tagged with the simplified POS tags.
-	 * @return: An Iterable that feeds out word-POSTag pairs.
+	 * @return An Iterable that feeds out word-POSTag pairs.
 	 */
 	public POSTagger tag() {
 		// No filtering by HTML tags, simplified tag set, no POS tag filtering:
@@ -152,10 +152,10 @@ public class POSTagger implements Iterator<List<String>> {
 	/**
 	 * Only text within provided HTML tags will be POS-tagged, with simplified POS tag set.
 	 * 
-     * @param htmlTags: Space-separated string of HTML tags. Only text within those
+     * @param htmlTags Space-separated string of HTML tags. Only text within those
      *                  HTML tags in <code>content</code> will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
-	 * @return: An Iterable that feeds out word-POSTag pairs.
+	 * @return An Iterable that feeds out word-POSTag pairs.
 	 */
 	public POSTagger tag(String htmlTags) {
     	// Filtering by HTML tags, simplified tag set, no POS tag filtering:
@@ -170,12 +170,12 @@ public class POSTagger implements Iterator<List<String>> {
 	 * Only text within provided HTML tags will be POS-tagged. The second
 	 * parameter controls whether only the simplified set of POS-tags should
 	 * be used.
-     * @param htmlTags: Space-separated string of HTML tags. Only text within those
+     * @param htmlTags Space-separated string of HTML tags. Only text within those
      *                  HTML tags in this tagger's content will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
-     * @param simplifiedPOSTags: Map very granular POS tags into a simplified set.
+     * @param simplifiedPOSTags Map very granular POS tags into a simplified set.
      *                  Pass <code>false</code> if full POS tag granularity is wanted.
-	 * @return: An Iterable that feeds out word-POSTag pairs.
+	 * @return An Iterable that feeds out word-POSTag pairs.
 	 */
 
 	public POSTagger tag(String htmlTags, boolean simplifiedPOSTags) {
@@ -190,14 +190,14 @@ public class POSTagger implements Iterator<List<String>> {
 	/**
 	 * Full control over all three behaviors.
 	 * 
-     * @param htmlTags: Space-separated string of HTML tags. Only text within those
+     * @param htmlTags Space-separated string of HTML tags. Only text within those
      *                  HTML tags in <code>content</code> will be POS-tagged. Example: "h1 p".
      *                  Pass <code>null</code> if inapplicable.
-     * @param simplifiedPOSTags: Map very granular POS tags into a simplified set.
+     * @param simplifiedPOSTags Map very granular POS tags into a simplified set.
      *                  Pass <code>false</code> if full POS tag granularity is wanted.
-     * @param posTagList: Space-separated list of POS tags to which output is to be limited.
+     * @param posTags Space-separated list of POS tags to which output is to be limited.
      *                  Pass <code>null</code> if inapplicable.  
-	 * @return: An Iterable that feeds out word-POSTag pairs.
+	 * @return An Iterable that feeds out word-POSTag pairs.
 	 */
 	
 	public POSTagger tag(String htmlTags, boolean simplifiedPOSTags, String posTags) {
@@ -222,7 +222,7 @@ public class POSTagger implements Iterator<List<String>> {
 	
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
-	 * @return: Returns a list of two strings: the first
+	 * @return Returns a list of two strings: the first
 	 * is a word from the tagger's content, the second
 	 * is the corresponding tag.
 	 */
@@ -250,7 +250,7 @@ public class POSTagger implements Iterator<List<String>> {
 	 * in the content. Often this set will just have one
 	 * POS tag member. But some words might have different
 	 * tags in different contexts.
-	 * @return: a HashMap<String, Set<String>> from a content
+	 * @return a HashMap<String, Set<String>> from a content
 	 * word to a set with all the POS tags assigned to that
 	 * word. 
 	 */
@@ -326,7 +326,7 @@ public class POSTagger implements Iterator<List<String>> {
 	/**
 	 * This module is intended for use with applications.
 	 * Here is a runnable example.
-	 * @param args: no command line arguments are expected.
+	 * @param args no command line arguments are expected.
 	 */
 	public static void main(String[] args) {
 		String content = "<html><head></head><body><h1>Why I am so famous</h1>I will tell you why that is!</body></html>";
